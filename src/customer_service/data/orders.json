@@ -1,0 +1,47 @@
+[
+  {
+    "order_id": "ORD-1001",
+    "status": "shipped",
+    "status_detail": "Your package left our warehouse and is with the carrier.",
+    "updated_at": "2026-09-17T08:30:00Z",
+    "estimated_delivery": "2026-09-21",
+    "tracking_reference": "TRK-781204",
+    "customer_email": "alice@example.com",
+    "customer_name": "Alice Morgan",
+    "delivered_at": null,
+    "payment_status": "paid",
+    "charged_amount": "89.99",
+    "currency": "USD",
+    "charge_description": "Souqly order ORD-1001"
+  },
+  {
+    "order_id": "ORD-1002",
+    "status": "processing",
+    "status_detail": "We have received your order and are preparing it for dispatch.",
+    "updated_at": "2026-09-18T13:15:00Z",
+    "estimated_delivery": "2026-09-24",
+    "tracking_reference": null,
+    "customer_email": "ben@example.com",
+    "customer_name": "Ben Carter",
+    "delivered_at": null,
+    "payment_status": "paid",
+    "charged_amount": "42.50",
+    "currency": "USD",
+    "charge_description": "Souqly order ORD-1002"
+  },
+  {
+    "order_id": "ORD-1003",
+    "status": "delivered",
+    "status_detail": "Your order was delivered.",
+    "updated_at": "2026-09-16T16:42:00Z",
+    "estimated_delivery": null,
+    "tracking_reference": "TRK-118902",
+    "customer_email": "carla@example.com",
+    "customer_name": "Carla Diaz",
+    "delivered_at": "2026-09-16",
+    "payment_status": "paid",
+    "charged_amount": "120.00",
+    "currency": "USD",
+    "charge_description": "Souqly order ORD-1003"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "promo_id": "DEMO-SHIP-10",
+    "text": "[Development sample] For a future order, use code DEMO-SHIP10 for 10% off standard shipping.",
+    "topic_tags": ["shipping", "delivery", "tracking"],
+    "order_state_tags": ["shipped", "delivered"],
+    "active": true,
+    "starts_on": "2026-09-01",
+    "ends_on": "2026-12-31",
+    "is_synthetic": true
+  },
+  {
+    "promo_id": "DEMO-DELIVERED-15",
+    "text": "[Development sample] For a future order, use code DEMO-THANKS15 for 15% off selected marketplace items.",
+    "topic_tags": [],
+    "order_state_tags": ["delivered"],
+    "active": true,
+    "starts_on": "2026-09-01",
+    "ends_on": "2026-12-31",
+    "is_synthetic": true
+  },
+  {
+    "promo_id": "DEMO-EXPIRED",
+    "text": "[Development sample] This expired offer must never be shown.",
+    "topic_tags": ["shipping", "delivery"],
+    "order_state_tags": [],
+    "active": true,
+    "starts_on": "2026-01-01",
+    "ends_on": "2026-08-31",
+    "is_synthetic": true
+  },
+  {
+    "promo_id": "DEMO-INACTIVE",
+    "text": "[Development sample] This inactive offer must never be shown.",
+    "topic_tags": ["shipping", "delivery"],
+    "order_state_tags": [],
+    "active": false,
+    "starts_on": "2026-09-01",
+    "ends_on": "2026-12-31",
+    "is_synthetic": true
+  }
+]
