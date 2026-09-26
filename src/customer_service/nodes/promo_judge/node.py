@@ -34,7 +34,7 @@ class PromoJudge(Protocol):
 def create_structured_judge(model: BaseChatModel) -> PromoJudge:
     """Bind Gemini's structured-output support to the limited decision schema."""
 
-    return model.with_structured_output(PromoDecision)
+    return model.with_structured_output(PromoDecision, method="json_schema")
 
 
 def build_node(

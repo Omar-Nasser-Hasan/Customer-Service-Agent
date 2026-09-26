@@ -9,6 +9,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 from customer_service.infrastructure.orders import OrderRepository
 from customer_service.infrastructure.promotions import PromotionRepository
+from customer_service.state.message_text import content_to_text
 from customer_service.state.models import AgentState
 
 
@@ -107,7 +108,7 @@ def build_node(
                 "promo_line": None,
             }
 
-        draft_text = draft.content if isinstance(draft.content, str) else str(draft.content)
+        draft_text = content_to_text(draft.content)
         return {
             "promo_matches": matches,
             "draft_response": draft_text,

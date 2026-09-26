@@ -2,6 +2,7 @@
 
 from langchain_core.messages import AIMessage
 
+from customer_service.state.message_text import content_to_text
 from customer_service.state.models import AgentState
 
 
@@ -11,5 +12,5 @@ def final_reply(state: dict[str, object] | AgentState) -> str:
         if isinstance(message, AIMessage) and not message.tool_calls:
             if isinstance(message.content, str):
                 return message.content
-            return "".join(item if isinstance(item, str) else str(item) for item in message.content)
+            return content_to_text(message.content)
     raise RuntimeError("The agent completed without a customer-facing response")
