@@ -5,7 +5,7 @@ from __future__ import annotations
 from enum import StrEnum
 from functools import lru_cache
 
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -44,6 +44,10 @@ class Settings(BaseSettings):
                 provider=ModelProvider.GOOGLE_GENAI,
                 model="gemini-3-flash-preview",
             ),
+            "safety_check": NodeModelConfig(
+                provider=ModelProvider.GOOGLE_GENAI,
+                model="gemini-3.1-flash-lite",
+            ),
         }
     )
 
@@ -54,6 +58,8 @@ class Settings(BaseSettings):
     google_oauth_client_id: str | None = None
 
     postgres_dsn: SecretStr | None = None
+    langgraph_strict_msgpack: bool = True
+    checkpoint_retention_days: int = Field(default=90, ge=1)
     voyage_api_key: SecretStr | None = None
     langsmith_api_key: SecretStr | None = None
     meta_verify_token: SecretStr | None = None
@@ -71,6 +77,13 @@ class Settings(BaseSettings):
         if value is None or not value.get_secret_value():
             raise ValueError(f"Missing required configuration: {name}")
         return value.get_secret_value()
+
+    @field_validator("langgraph_strict_msgpack")
+    @classmethod
+    def strict_msgpack_must_remain_enabled(cls, value: bool) -> bool:
+        if not value:
+            raise ValueError("LANGGRAPH_STRICT_MSGPACK must remain enabled")
+        return value
 
 
 @lru_cache
