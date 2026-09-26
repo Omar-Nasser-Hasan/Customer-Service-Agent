@@ -403,4 +403,5 @@ def test_adversarial_user_text_cannot_make_judge_invent_an_offer() -> None:
     )
 
     assert "100% off" not in final_reply(state)
-    assert "DEMO-SHIP10" in final_reply(state)
+    assert "DEMO-SHIP10" not in final_reply(state)
+    assert state["safety_action"] == "refuse"

@@ -38,11 +38,13 @@ def test_message_endpoint_returns_agent_reply_and_keeps_thread_history() -> None
     assert first.status_code == 200
     assert first.json() == {
         "thread_id": "customer-42",
+        "status": "completed",
         "reply": "Please send your order ID.",
     }
     assert second.status_code == 200
     assert second.json() == {
         "thread_id": "customer-42",
+        "status": "completed",
         "reply": "Thanks. Order ORD-1001 has shipped.",
     }
 
@@ -76,8 +78,41 @@ def test_message_endpoint_returns_a_catalog_promotion_when_the_judge_approves() 
     assert response.status_code == 200
     assert response.json() == {
         "thread_id": "promo-api",
+        "status": "completed",
         "reply": (
             "Most orders arrive within 3 to 5 business days.\n\n"
             "[Development sample] For a future order, use code DEMO-SHIP10 for 10% off standard shipping."
         ),
     }
+
+
+def test_handoff_returns_one_acknowledgement_then_stays_silent() -> None:
+    model = ScriptedChatModel(responses=[AIMessage(content="This must not be used.")])
+    graph = build_graph(
+        settings=Settings(),
+        repository=default_order_repository(),
+        model=model,
+        promo_judge=declining_promo_judge(),
+    )
+    client = TestClient(create_app(lambda: graph))
+
+    opened = client.post(
+        "/conversations/handoff-api/messages", json={"message": "I need a human agent."}
+    )
+    active = client.post(
+        "/conversations/handoff-api/messages", json={"message": "Are you there?"}
+    )
+
+    assert opened.status_code == 202
+    assert opened.json() == {
+        "thread_id": "handoff-api",
+        "status": "handoff_open",
+        "reply": "I'm connecting you with a support specialist. They'll continue here shortly.",
+    }
+    assert active.status_code == 202
+    assert active.json() == {
+        "thread_id": "handoff-api",
+        "status": "handoff_active",
+        "reply": None,
+    }
+    assert model.response_index == 0
