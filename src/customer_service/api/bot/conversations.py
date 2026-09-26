@@ -1,10 +1,11 @@
-"""Local conversation endpoint retained from Iteration 1."""
+"""Customer conversation endpoint, including durable-handoff response states."""
 
 from __future__ import annotations
 
-from typing import Annotated, Callable
+from datetime import UTC, datetime
+from typing import Annotated, Any, Callable, Literal
 
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Path, Response
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -25,22 +26,48 @@ class IncomingMessage(BaseModel):
 
 class ConversationResponse(BaseModel):
     thread_id: str
-    reply: str
+    status: Literal["completed", "refused", "handoff_open", "handoff_active"]
+    reply: str | None
 
 
-def create_router(graph_provider: Callable[[], object]) -> APIRouter:
+def _handoff_is_active(state: dict[str, object]) -> bool:
+    return bool(state.get("escalated") and state.get("case_status") in {"open", "claimed"})
+
+
+def create_router(graph_provider: Callable[[], Any]) -> APIRouter:
     router = APIRouter(prefix="/conversations", tags=["bot"])
 
     @router.post("/{thread_id}/messages", response_model=ConversationResponse)
     async def send_message(
         thread_id: Annotated[str, Path(min_length=1, max_length=128)],
         incoming: IncomingMessage,
-        graph: object = Depends(graph_provider),
+        response: Response,
     ) -> ConversationResponse:
+        graph = graph_provider()
+        config = {"configurable": {"thread_id": thread_id}}
+        snapshot = await graph.aget_state(config)
+        if _handoff_is_active(snapshot.values):
+            # The graph remains paused, but customer activity still resets the
+            # retention clock for an open case.
+            await graph.aupdate_state(config, {"last_activity_at": datetime.now(UTC)})
+            response.status_code = 202
+            return ConversationResponse(thread_id=thread_id, status="handoff_active", reply=None)
+
         state = await graph.ainvoke(
             {"messages": [HumanMessage(content=incoming.message)]},
-            config={"configurable": {"thread_id": thread_id}},
+            config=config,
         )
-        return ConversationResponse(thread_id=thread_id, reply=final_reply(state))
+        if _handoff_is_active(state):
+            response.status_code = 202
+            return ConversationResponse(
+                thread_id=thread_id,
+                status="handoff_open",
+                reply=final_reply(state),
+            )
+        return ConversationResponse(
+            thread_id=thread_id,
+            status="refused" if state.get("safety_action") == "refuse" else "completed",
+            reply=final_reply(state),
+        )
 
     return router
