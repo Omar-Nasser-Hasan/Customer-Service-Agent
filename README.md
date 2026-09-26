@@ -1,10 +1,11 @@
-# WhatsApp customer-service agent — Iteration 3
+# WhatsApp customer-service agent — Iteration 4
 
 This iteration adds an optional promotion branch after a completed support
 answer. It retains public FAQ lookup and verified account support for order
-status, returns, and billing. It still deliberately excludes WhatsApp/Meta
-integration, safety screening, escalation, admin functionality, database
-storage, and embeddings.
+status, returns, and billing, and adds a hybrid safety gate plus durable human
+handoff. It still deliberately excludes WhatsApp/Meta integration, admin
+routes/UI, authentication, production promotions, vector retrieval, tracing,
+and load testing.
 
 ## Supported support flows
 
@@ -12,7 +13,7 @@ storage, and embeddings.
   without identity verification.
 - `order_status`, `returns`, and `billing` require an order ID plus the email
   used for that order. A successful match remains valid for the current
-  in-memory conversation thread.
+  durable conversation thread.
 - The return rule is deterministic: an order must be delivered and is eligible
   through 14 calendar days after its recorded delivery date. This release only
   reports eligibility; it does not create a return.
@@ -20,6 +21,14 @@ storage, and embeddings.
   promotion per conversation. A deterministic prefilter rejects negative
   English-language sentiment, inactive/expired offers, duplicate promotions,
   and unmatched offers before the separate `promo_judge` model is called.
+- `safety_check` runs before the assistant. It refuses clear prompt-injection
+  and abusive messages, and opens a durable human handoff for an explicit
+  human request, defined return exceptions, billing disputes, safety
+  uncertainty, or model/tool failure.
+- A newly escalated conversation receives one fixed acknowledgement. While its
+  handoff remains open, later customer messages receive `202 handoff_active`
+  with no bot reply. The future authenticated admin surface will resolve the
+  LangGraph interrupt through `HandoffService`.
 
 ## Promotion prototype warning
 
@@ -54,17 +63,23 @@ The local fixture identities are intentionally non-production:
    python -m pip install -e ".[dev]"
    ```
 
-3. Use `.env.example` as a template, then set `GOOGLE_API_KEY`. The selected
+3. Start local Postgres for durable checkpoints:
+
+   ```powershell
+   docker compose up -d
+   ```
+
+4. Use `.env.example` as a template, then set `GOOGLE_API_KEY`. The selected
    model is configured per node through `NODE_MODELS__<NODE>__MODEL`; the
    assistant defaults to `gemini-3.1-flash-lite`. Settings load from the
    process environment and, for local development, an optional `.env` file.
-4. Start the service:
+5. Start the service:
 
    ```powershell
    python -m uvicorn customer_service.api.app:app --reload
    ```
 
-5. Send a message using a stable, caller-chosen conversation ID:
+6. Send a message using a stable, caller-chosen conversation ID:
 
    ```powershell
    Invoke-RestMethod -Method Post `
@@ -92,9 +107,22 @@ Request:
 Response:
 
 ```json
-{"thread_id": "demo-1", "reply": "..."}
+{"thread_id": "demo-1", "status": "completed", "reply": "..."}
 ```
 
-Conversation history and identity verification are held in process memory only.
-Restarting the service clears both; durable Postgres checkpoints are
-intentionally deferred.
+An initial escalation returns `202` with `status: "handoff_open"` and the fixed
+specialist acknowledgement. Later messages on that open thread return `202`
+with `status: "handoff_active"` and `reply: null`.
+
+Conversation history, verification, and handoff state are stored in local
+Postgres through `AsyncPostgresSaver`. `LANGGRAPH_STRICT_MSGPACK=true` is
+enforced at runtime to restrict checkpoint deserialization. Run the manual
+retention command to remove resolved/inactive threads older than 90 days:
+
+```powershell
+python -m customer_service.retention
+```
+
+Open and claimed handoffs are never pruned. Scheduling retention, staff auth,
+admin case actions, audit logs, and WhatsApp/Meta transport are intentionally
+deferred to later iterations.
