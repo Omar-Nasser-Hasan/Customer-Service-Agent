@@ -24,6 +24,16 @@ class NodeModelConfig(BaseModel):
     temperature: float = Field(default=0, ge=0, le=2)
 
 
+class WhatsAppTemplate(BaseModel):
+    """A deploy-time-approved template allowed outside WhatsApp's service window."""
+
+    template_id: str = Field(min_length=1, max_length=128)
+    name: str = Field(min_length=1, max_length=512)
+    language: str = Field(min_length=2, max_length=32)
+    components: list[str] = Field(default_factory=lambda: ["body"])
+    parameter_count: int = Field(default=0, ge=0, le=20)
+
+
 class Settings(BaseSettings):
     """Settings are loaded from the process environment or an optional .env file."""
 
@@ -66,6 +76,18 @@ class Settings(BaseSettings):
     websocket_token_ttl_seconds: int = Field(default=300, ge=30)
     admin_allowed_emails: list[str] = Field(default_factory=list)
     google_oauth_client_id: str | None = None
+    admin_cookie_domain: str | None = None
+    admin_cookie_secure: bool = False
+    admin_api_url: str = "http://localhost:8000"
+    csrf_cookie_name: str = "customer_service_csrf"
+    staff_session_cookie_name: str = "customer_service_staff_session"
+    whatsapp_phone_encryption_key: SecretStr | None = None
+    whatsapp_thread_hmac_key: SecretStr | None = None
+    meta_graph_api_version: str = "v26.0"
+    whatsapp_template_catalog: list[WhatsAppTemplate] = Field(default_factory=list)
+    worker_poll_seconds: float = Field(default=1.0, ge=0.1, le=60)
+    worker_max_attempts: int = Field(default=8, ge=1, le=50)
+    whatsapp_service_window_hours: int = Field(default=24, ge=1, le=72)
 
     postgres_dsn: SecretStr | None = None
     langgraph_strict_msgpack: bool = True
