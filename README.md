@@ -1,8 +1,37 @@
-# WhatsApp customer-service agent — Iteration 6
+# WhatsApp customer-service agent — Iteration 8
 
 The agent retains public FAQ lookup, verified account support for order status,
 returns, and billing, an optional promotion branch, and a hybrid safety gate
-with durable human handoff. Iteration 6 adds retrieval quality while preserving
+with durable human handoff. Iteration 8 adds operational staff and WhatsApp
+transport surfaces while preserving the graph and its tool contracts.
+
+## Iteration 8 — staff inbox and WhatsApp transport
+
+The API owns Google ID-token verification, signed HttpOnly staff sessions,
+double-submit CSRF protection, allowlisted staff access, and short-lived
+one-time WebSocket tokens. `apps/admin` is a small Next.js App Router inbox:
+`/cases` keeps the list mounted and `/cases/[caseId]` is a shareable detail URL.
+
+Operational data is deliberately separate from LangGraph checkpoints. Postgres
+stores a case projection, customer-visible messages, append-only audit events,
+encrypted WhatsApp contacts, durable inbound webhook records, and an outbox.
+The raw phone number is encrypted with `WHATSAPP_PHONE_ENCRYPTION_KEY`; the
+graph thread ID is an HMAC derived identifier. Neither belongs in logs, traces,
+handoff summaries, or WebSocket events.
+
+Run local operations with `docker compose up --build`. This starts Postgres,
+the API, the always-on worker, and the admin UI. Supply real Google and Meta
+sandbox credentials only in `.env`; the repository contains no credentials.
+The worker claims inbound records and due outbox records with `SKIP LOCKED`.
+Cloud Run deployment must run it as a separate service with always-allocated
+CPU and at least one instance.
+
+Free-text staff messages require an inbound WhatsApp message within the local
+24-hour service window. Outside it, the claimant must select a deployment-owned
+entry from `WHATSAPP_TEMPLATE_CATALOG`; unknown templates and mismatched
+parameter counts fail closed. Open and claimed cases are retained indefinitely;
+resolved case projections and related operational records are pruned after 90
+days by the existing runtime retention loop.
 the prior safety and operational hardening. It still excludes WhatsApp/Meta
 integration, admin routes/UI, authentication, and production promotions.
 
