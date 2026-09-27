@@ -7,7 +7,8 @@ from typing import Callable
 
 from langchain_core.messages import AIMessage
 
-from customer_service.nodes.safety_check.node import latest_customer_message, redact_sensitive_text
+from customer_service.nodes.safety_check.node import latest_customer_message
+from customer_service.privacy.redaction import redact_text
 from customer_service.state.models import AgentState, HandoffSummary
 
 
@@ -30,7 +31,7 @@ def _attempted_tools(state: AgentState) -> list[str]:
 
 
 def _clean_customer_request(text: str) -> str:
-    return re.sub(r"\s+", " ", redact_sensitive_text(text)).strip()[:1_000]
+    return re.sub(r"\s+", " ", redact_text(text)).strip()[:1_000]
 
 
 def build_node() -> Callable[[AgentState], dict[str, object]]:

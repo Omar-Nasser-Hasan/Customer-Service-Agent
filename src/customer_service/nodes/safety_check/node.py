@@ -12,15 +12,12 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 
 from customer_service.config.settings import Settings
 from customer_service.nodes.safety_check.prompt import build_system_prompt
+from customer_service.privacy.redaction import redact_text
 from customer_service.state.models import AgentState, EscalationReason
 
 
 SAFE_REFUSAL = "I can help with customer-support questions, but I can't help with that request."
 
-_EMAIL = re.compile(r"\b[\w.+-]+@[\w-]+(?:\.[\w-]+)+\b")
-_PHONE = re.compile(r"(?<!\w)(?:\+?\d[\d .()\-]{7,}\d)(?!\w)")
-_CARD = re.compile(r"(?<!\d)(?:\d[ -]?){13,19}(?!\d)")
-_ORDER_ID = re.compile(r"\bORD-\d+\b", re.IGNORECASE)
 _INJECTION = re.compile(
     r"\b(ignore (?:all |any )?(?:previous|prior)|system prompt|developer message|"
     r"reveal .*instructions|jailbreak|act as (?:a )?(?:system|developer))\b",
@@ -60,10 +57,7 @@ def create_structured_judge(model: BaseChatModel) -> SafetyJudge:
 def redact_sensitive_text(text: str) -> str:
     """Remove direct identifiers before ambiguous text reaches the safety model."""
 
-    redacted = _EMAIL.sub("[EMAIL]", text)
-    redacted = _PHONE.sub("[PHONE]", redacted)
-    redacted = _CARD.sub("[CARD]", redacted)
-    return _ORDER_ID.sub("[ORDER_ID]", redacted)
+    return redact_text(text)
 
 
 def latest_customer_message(state: AgentState) -> str:

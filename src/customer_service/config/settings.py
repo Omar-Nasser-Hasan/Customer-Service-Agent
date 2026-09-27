@@ -5,12 +5,17 @@ from __future__ import annotations
 from enum import StrEnum
 from functools import lru_cache
 
-from pydantic import BaseModel, Field, SecretStr, field_validator
+from pydantic import BaseModel, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class ModelProvider(StrEnum):
     GOOGLE_GENAI = "google_genai"
+
+
+class GeminiApiTier(StrEnum):
+    FREE = "free"
+    PAID = "paid"
 
 
 class NodeModelConfig(BaseModel):
@@ -34,6 +39,7 @@ class Settings(BaseSettings):
     frontend_origin: str = "http://localhost:3000"
 
     google_api_key: SecretStr | None = None
+    gemini_api_tier: GeminiApiTier = GeminiApiTier.FREE
     node_models: dict[str, NodeModelConfig] = Field(
         default_factory=lambda: {
             "assistant": NodeModelConfig(
@@ -45,6 +51,10 @@ class Settings(BaseSettings):
                 model="gemini-3-flash-preview",
             ),
             "safety_check": NodeModelConfig(
+                provider=ModelProvider.GOOGLE_GENAI,
+                model="gemini-3.1-flash-lite",
+            ),
+            "eval_judge": NodeModelConfig(
                 provider=ModelProvider.GOOGLE_GENAI,
                 model="gemini-3.1-flash-lite",
             ),
@@ -62,10 +72,36 @@ class Settings(BaseSettings):
     checkpoint_retention_days: int = Field(default=90, ge=1)
     voyage_api_key: SecretStr | None = None
     langsmith_api_key: SecretStr | None = None
+    langsmith_tracing: bool = False
+    langsmith_project: str = "customer-service-agent"
+    langsmith_endpoint: str = "https://api.smith.langchain.com"
+    langsmith_sample_rate: float = Field(default=1.0, ge=0, le=1)
+    trace_thread_hash_salt: SecretStr | None = None
     meta_verify_token: SecretStr | None = None
     meta_app_secret: SecretStr | None = None
     meta_phone_number_id: str | None = None
     meta_access_token: SecretStr | None = None
+
+    @model_validator(mode="after")
+    def ensure_default_node_models(self) -> "Settings":
+        """Merge newly introduced node defaults with partial env mappings.
+
+        Pydantic-settings treats a nested dictionary supplied through one or
+        more environment variables as a replacement mapping. Keeping this
+        merge at the settings boundary means adding an evaluator or future
+        node cannot break deployments whose .env only overrides existing
+        production nodes.
+        """
+
+        defaults = {
+            "assistant": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
+            "promo_judge": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3-flash-preview"),
+            "safety_check": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
+            "eval_judge": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
+        }
+        for name, default in defaults.items():
+            self.node_models.setdefault(name, default)
+        return self
 
     def model_for(self, node_name: str) -> NodeModelConfig:
         try:

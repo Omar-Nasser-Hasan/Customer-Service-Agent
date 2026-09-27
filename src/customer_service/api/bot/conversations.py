@@ -10,6 +10,7 @@ from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from customer_service.graph.response import final_reply
+from customer_service.observability.runtime import ObservabilityRuntime
 
 
 class IncomingMessage(BaseModel):
@@ -34,7 +35,10 @@ def _handoff_is_active(state: dict[str, object]) -> bool:
     return bool(state.get("escalated") and state.get("case_status") in {"open", "claimed"})
 
 
-def create_router(graph_provider: Callable[[], Any]) -> APIRouter:
+def create_router(
+    graph_provider: Callable[[], Any],
+    observability_provider: Callable[[], ObservabilityRuntime] | None = None,
+) -> APIRouter:
     router = APIRouter(prefix="/conversations", tags=["bot"])
 
     @router.post("/{thread_id}/messages", response_model=ConversationResponse)
@@ -44,7 +48,9 @@ def create_router(graph_provider: Callable[[], Any]) -> APIRouter:
         response: Response,
     ) -> ConversationResponse:
         graph = graph_provider()
-        config = {"configurable": {"thread_id": thread_id}}
+        config: dict[str, Any] = {"configurable": {"thread_id": thread_id}}
+        if observability_provider is not None:
+            config["callbacks"] = observability_provider().callbacks(thread_id)
         snapshot = await graph.aget_state(config)
         if _handoff_is_active(snapshot.values):
             # The graph remains paused, but customer activity still resets the

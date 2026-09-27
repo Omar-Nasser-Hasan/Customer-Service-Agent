@@ -31,11 +31,16 @@ def create_app(graph_provider: Callable[[], Any] | None = None) -> FastAPI:
 
     app = FastAPI(
         title="Customer Service Agent",
-        version="0.4.0",
+        version="0.5.0",
         lifespan=None if graph_provider is not None else lifespan,
     )
     app.include_router(health_router)
-    app.include_router(create_conversations_router(graph_provider or (lambda: runtime.graph)))
+    app.include_router(
+        create_conversations_router(
+            graph_provider or (lambda: runtime.graph),
+            observability_provider=None if graph_provider is not None else (lambda: runtime.observability),
+        )
+    )
     return app
 
 

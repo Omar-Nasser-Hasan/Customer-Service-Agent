@@ -7,6 +7,7 @@ from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 
+from customer_service.caching.policy import decide_cache_policy, record_cache_decision
 from customer_service.config.settings import Settings
 from customer_service.infrastructure.checkpoints import local_checkpointer
 from customer_service.infrastructure.faqs import FaqRepository, default_faq_repository
@@ -59,6 +60,22 @@ def build_graph(
     billing = create_billing_tool(repository)
     faq_lookup = create_faq_lookup_tool(faq_repository or default_faq_repository())
     tools = [order_status, returns, billing, faq_lookup]
+    record_cache_decision(
+        decide_cache_policy(
+            node_name="assistant",
+            prompt_revision="assistant/v1",
+            model=settings.model_for("assistant").model,
+            tool_schemas=[{"name": tool.name} for tool in tools],
+        )
+    )
+    for node_name in ("promo_judge", "safety_check"):
+        record_cache_decision(
+            decide_cache_policy(
+                node_name=node_name,
+                prompt_revision=f"{node_name}/v1",
+                model=settings.model_for(node_name).model,
+            )
+        )
     assistant_model = model or create_chat_model("assistant", settings)
     promotion_repository = promotion_repository or default_promotion_repository()
     judge = promo_judge or create_structured_judge(create_chat_model("promo_judge", settings))
