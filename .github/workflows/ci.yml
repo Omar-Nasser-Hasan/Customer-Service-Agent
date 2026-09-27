@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: customer_service
+          POSTGRES_PASSWORD: customer_service
+          POSTGRES_DB: customer_service
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U customer_service -d customer_service"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m compileall -q src
+      - run: python -m pytest -q -p no:cacheprovider
+        env:
+          POSTGRES_DSN: postgresql://customer_service:customer_service@localhost:5432/customer_service

@@ -1,0 +1,63 @@
+name: Live hardening gate
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: customer_service
+          POSTGRES_PASSWORD: customer_service
+          POSTGRES_DB: customer_service
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U customer_service -d customer_service"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - name: Require live-test secrets
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+        run: test -n "$GOOGLE_API_KEY" && test -n "$LANGSMITH_API_KEY"
+      - name: Start API
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+          LANGSMITH_TRACING: "true"
+          LANGSMITH_SAMPLE_RATE: "1"
+          GEMINI_API_TIER: free
+          POSTGRES_DSN: postgresql://customer_service:customer_service@localhost:5432/customer_service
+        run: nohup python -m uvicorn customer_service.api.app:app --host 127.0.0.1 --port 8000 > api.log 2>&1 &
+      - name: Wait for API
+        run: for i in {1..30}; do curl -fsS http://127.0.0.1:8000/health && break; sleep 1; done
+      - name: Run live synthetic evaluation
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+          LANGSMITH_TRACING: "true"
+          LANGSMITH_SAMPLE_RATE: "1"
+          GEMINI_API_TIER: free
+        run: python -m customer_service.evaluation.cli
+      - name: Warm up service
+        run: curl -fsS -X POST http://127.0.0.1:8000/conversations/warmup/messages -H 'content-type: application/json' -d '{"message":"What payment methods do you accept?"}'
+      - name: Run two-minute 10-user load gate
+        run: locust -f loadtests/locustfile.py --headless --host http://127.0.0.1:8000 -u 10 -r 10 -t 2m --csv artifacts/load
+      - name: Enforce p95 and success thresholds
+        run: python .github/scripts/assert_load_gate.py artifacts/load_stats.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-hardening-artifacts
+          path: |
+            artifacts/
+            api.log
