@@ -1,0 +1,1 @@
+import Link from "next/link"; export function CaseListItem({item}:{item:any}){return <Link className="case" href={`/cases/${item.case_id}`}><b>{item.assigned_to_email ?? "Unassigned"}</b><div>{item.handoff_summary?.latest_customer_request?.slice(0,90) ?? "Escalated case"}</div><small>{item.status} · v{item.version}</small></Link>}

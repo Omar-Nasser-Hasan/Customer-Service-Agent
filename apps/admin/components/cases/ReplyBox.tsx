@@ -1,0 +1,1 @@
+"use client"; import {useState} from "react"; export function ReplyBox({onReply}:{onReply:(text:string)=>Promise<void>}){const [text,setText]=useState("");return <div className="reply"><textarea value={text} onChange={e=>setText(e.target.value)} /><button onClick={async()=>{if(text.trim()){await onReply(text);setText("")}}}>Send</button></div>}

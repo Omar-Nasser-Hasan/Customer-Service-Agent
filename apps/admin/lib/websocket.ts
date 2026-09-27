@@ -1,0 +1,2 @@
+import {api} from "./api";
+export async function subscribe(onEvent:(event:any)=>void){const {token}=await api<{token:string}>("/admin/auth/ws-token",{method:"POST"});const base=process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";const ws=new WebSocket(`${base.replace(/^http/,"ws")}/admin/ws?token=${encodeURIComponent(token)}`);ws.onmessage=(event)=>onEvent(JSON.parse(event.data));return()=>ws.close();}

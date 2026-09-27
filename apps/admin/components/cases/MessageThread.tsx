@@ -1,0 +1,1 @@
+export function MessageThread({messages}:{messages:any[]}){return <div>{messages.map(m=><div className={`message ${m.direction}`} key={m.message_id}><b>{m.direction}</b><div>{m.content}</div><small>{m.delivery_status}</small></div>)}</div>}
