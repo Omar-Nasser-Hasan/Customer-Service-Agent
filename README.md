@@ -1,11 +1,38 @@
-# WhatsApp customer-service agent — Iteration 4
+# WhatsApp customer-service agent — Iteration 5
 
-This iteration adds an optional promotion branch after a completed support
-answer. It retains public FAQ lookup and verified account support for order
-status, returns, and billing, and adds a hybrid safety gate plus durable human
-handoff. It still deliberately excludes WhatsApp/Meta integration, admin
-routes/UI, authentication, production promotions, vector retrieval, tracing,
-and load testing.
+The agent retains public FAQ lookup, verified account support for order status,
+returns, and billing, an optional promotion branch, and a hybrid safety gate
+with durable human handoff. Iteration 5 hardens those existing capabilities; it
+still deliberately excludes WhatsApp/Meta integration, admin routes/UI,
+authentication, production promotions, and vector retrieval.
+
+## Iteration 5 hardening
+
+Iteration 5 does not add a customer-facing feature. It adds redacted LangSmith
+telemetry, synthetic evaluation fixtures, CI quality gates, cache-policy
+telemetry, and scheduled checkpoint retention.
+
+- Tracing is disabled by default. When enabled, emails, phones, card-like
+  values, order IDs, direct secrets, and raw thread IDs are removed or hashed
+  before telemetry is emitted. A LangSmith delivery failure marks health as
+  `degraded` but never blocks a customer conversation.
+- Retention runs once at startup and every 24 hours. The manual
+  `python -m customer_service.retention` command remains available. Multiple
+  application instances need a dedicated scheduler or distributed lock before
+  production deployment.
+- `src/customer_service/data/evaluations.json` is a versioned synthetic corpus.
+  It drives deterministic contracts; completed answers and optional promotions
+  can additionally be scored by the configured `eval_judge` model.
+- Gemini explicit cached content is deliberately **bypassed** for the current
+  LangChain tool-calling assistant. Gemini rejects cached requests that also
+  bind the system instruction/tool configuration. Cache decisions and stable
+  static-context fingerprints are logged so this limitation cannot become an
+  invisible permanent workaround. Final replies, transactional tool results,
+  billing data, and account data are never cached.
+- `GEMINI_API_TIER` labels reports as `free` or `paid`; it does not alter the
+  selected model. The initial live CI gate intentionally uses a free-tier key,
+  so quota or latency failures are genuine blocking results rather than being
+  hidden.
 
 ## Supported support flows
 
@@ -76,7 +103,7 @@ The local fixture identities are intentionally non-production:
 5. Start the service:
 
    ```powershell
-   python -m uvicorn customer_service.api.app:app --reload
+   python -m customer_service.api.run
    ```
 
 6. Send a message using a stable, caller-chosen conversation ID:
@@ -126,3 +153,19 @@ python -m customer_service.retention
 Open and claimed handoffs are never pruned. Scheduling retention, staff auth,
 admin case actions, audit logs, and WhatsApp/Meta transport are intentionally
 deferred to later iterations.
+
+## Quality gates
+
+Pull requests run compilation and the full offline test suite, including
+Postgres integration tests. Every push to `main` also requires protected
+`GOOGLE_API_KEY` and `LANGSMITH_API_KEY` secrets, runs live synthetic
+evaluation, then executes a two-minute Locust run with 10 concurrent users:
+80% public support and 20% verified seeded-account requests. The gate requires
+at least 99% success and p95 end-to-end latency no higher than eight seconds.
+Generated reports are uploaded as CI artifacts, not committed.
+
+Before production, replace the deterministic keyword FAQ lookup with the
+planned retrieval system, replace synthetic promotions and matching heuristics,
+introduce a provider-native cache adapter if cached assistant context is needed,
+use a billed Gemini project for representative performance results, and move
+retention leadership out of individual application instances.
