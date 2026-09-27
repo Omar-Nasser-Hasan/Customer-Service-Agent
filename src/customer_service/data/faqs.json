@@ -1,20 +1,38 @@
 [
   {
     "id": "shipping-times",
+    "language": "en",
     "title": "Shipping times",
-    "keywords": ["shipping", "delivery", "arrive", "late"],
     "answer": "Most orders arrive within 3 to 5 business days after dispatch. Use your order ID for a live order update."
   },
   {
+    "id": "shipping-times",
+    "language": "ar",
+    "title": "أوقات الشحن",
+    "answer": "تصل معظم الطلبات خلال 3 إلى 5 أيام عمل بعد الشحن. استخدم رقم طلبك للحصول على تحديث مباشر."
+  },
+  {
     "id": "return-window",
+    "language": "en",
     "title": "Return window",
-    "keywords": ["return", "refund", "exchange", "window"],
     "answer": "Eligible delivered items can be returned within 14 days of delivery, subject to the item being unused and in its original condition."
   },
   {
+    "id": "return-window",
+    "language": "ar",
+    "title": "نافذة الإرجاع",
+    "answer": "يمكن إرجاع المنتجات المؤهلة بعد تسليمها خلال 14 يومًا من تاريخ التسليم، بشرط أن تكون غير مستخدمة وفي حالتها الأصلية."
+  },
+  {
     "id": "payment-methods",
+    "language": "en",
     "title": "Payment methods",
-    "keywords": ["payment", "card", "cash", "wallet", "pay"],
     "answer": "Souqly accepts major cards and the payment methods shown at checkout."
+  },
+  {
+    "id": "payment-methods",
+    "language": "ar",
+    "title": "طرق الدفع",
+    "answer": "يقبل Souqly البطاقات الرئيسية وطرق الدفع المعروضة عند إتمام الشراء."
   }
 ]

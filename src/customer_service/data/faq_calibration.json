@@ -1,0 +1,14 @@
+{
+  "positive": [
+    {"query": "when will my package arrive?", "faq_id": "shipping-times"},
+    {"query": "متى يصل طلبي؟", "faq_id": "shipping-times"},
+    {"query": "how long do I have to send an item back", "faq_id": "return-window"},
+    {"query": "كيف يمكنني إرجاع المنتج؟", "faq_id": "return-window"},
+    {"query": "which cards can I use to pay", "faq_id": "payment-methods"},
+    {"query": "هل يمكن الدفع بالبطاقة؟", "faq_id": "payment-methods"}
+  ],
+  "negative": [
+    {"query": "how do I mine cryptocurrency?"},
+    {"query": "كيف أفتح حساب تداول؟"}
+  ]
+}

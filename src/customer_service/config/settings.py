@@ -71,6 +71,11 @@ class Settings(BaseSettings):
     langgraph_strict_msgpack: bool = True
     checkpoint_retention_days: int = Field(default=90, ge=1)
     voyage_api_key: SecretStr | None = None
+    voyage_model: str = "voyage-3.5-lite"
+    voyage_embedding_dimensions: int = Field(default=1024, ge=1, le=2048)
+    faq_corpus_version: str = "v1"
+    faq_min_similarity: float | None = Field(default=None, ge=-1, le=1)
+    faq_sync_on_startup: bool = False
     langsmith_api_key: SecretStr | None = None
     langsmith_tracing: bool = False
     langsmith_project: str = "customer-service-agent"

@@ -13,6 +13,7 @@ from customer_service.infrastructure.checkpoints import postgres_checkpointer, p
 from customer_service.infrastructure.orders import default_order_repository
 from customer_service.observability.runtime import ObservabilityRuntime
 from customer_service.services.handoffs import HandoffService
+from customer_service.retrieval.runtime import faq_repository_runtime
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class ApplicationRuntime:
         self.graph: Any | None = None
         self.checkpointer: Any | None = None
         self.handoffs: HandoffService | None = None
+        self.faq_repository: Any | None = None
         self.observability = ObservabilityRuntime(self.settings)
         self._stack = AsyncExitStack()
         self._retention_task: asyncio.Task[None] | None = None
@@ -32,10 +34,12 @@ class ApplicationRuntime:
 
     async def start(self) -> None:
         self.checkpointer = await self._stack.enter_async_context(postgres_checkpointer(self.settings))
+        self.faq_repository = await self._stack.enter_async_context(faq_repository_runtime(self.settings))
         self.graph = build_graph(
             settings=self.settings,
             repository=default_order_repository(),
             checkpointer=self.checkpointer,
+            faq_repository=self.faq_repository,
         )
         self.handoffs = HandoffService(self.graph)
         self.observability.start()

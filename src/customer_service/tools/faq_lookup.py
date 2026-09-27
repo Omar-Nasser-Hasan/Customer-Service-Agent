@@ -11,10 +11,10 @@ from customer_service.infrastructure.faqs import FaqRepository
 
 def create_faq_lookup_tool(repository: FaqRepository) -> BaseTool:
     @tool("faq_lookup")
-    def faq_lookup(query: str) -> str:
+    async def faq_lookup(query: str) -> str:
         """Find a policy, shipping, payment, or general-support FAQ answer."""
 
-        entry = repository.search(query)
+        entry = await repository.search(query)
         if entry is None:
             return json.dumps(
                 {
