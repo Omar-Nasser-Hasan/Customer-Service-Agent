@@ -21,8 +21,23 @@ if sys.platform == "win32":
 
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
 
 from customer_service.config.settings import Settings
+
+# Strict msgpack mode blocks reconstruction of any custom class that isn't
+# explicitly listed here. Every application-defined type that can end up in
+# checkpointed graph state must be added below by hand; that manual step is
+# the whole point of the allowlist; it stops an attacker who gains write
+# access to the checkpoint table from smuggling in arbitrary objects that
+# execute code on load. Keep this list scoped to exactly what the graph's
+# state schema actually holds, add a new tuple, do not widen the scope.
+ALLOWED_MSGPACK_MODULES = (
+    ("customer_service.state.models", "CustomerContext"),
+    ("customer_service.state.models", "PromoMatch"),
+    ("customer_service.state.models", "EscalationReason"),
+    ("customer_service.state.models", "HandoffSummary"),
+)
 
 
 def local_checkpointer() -> InMemorySaver:
@@ -50,7 +65,8 @@ async def postgres_checkpointer(settings: Settings) -> AsyncIterator[BaseCheckpo
     )
     await pool.open()
     try:
-        saver = AsyncPostgresSaver(pool)
+        serde = JsonPlusSerializer(allowed_msgpack_modules=ALLOWED_MSGPACK_MODULES)
+        saver = AsyncPostgresSaver(pool, serde=serde)
         await saver.setup()
         yield saver
     finally:
