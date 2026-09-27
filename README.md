@@ -1,10 +1,43 @@
-# WhatsApp customer-service agent — Iteration 5
+# WhatsApp customer-service agent — Iteration 6
 
 The agent retains public FAQ lookup, verified account support for order status,
 returns, and billing, an optional promotion branch, and a hybrid safety gate
-with durable human handoff. Iteration 5 hardens those existing capabilities; it
-still deliberately excludes WhatsApp/Meta integration, admin routes/UI,
-authentication, production promotions, and vector retrieval.
+with durable human handoff. Iteration 6 adds retrieval quality while preserving
+the prior safety and operational hardening. It still excludes WhatsApp/Meta
+integration, admin routes/UI, authentication, and production promotions.
+
+## Iteration 6 — bilingual semantic FAQ retrieval
+
+`faq_lookup` keeps its public tool contract but now retrieves from a mixed
+English/Arabic pgvector corpus. The implementation embeds title plus answer
+with Voyage `voyage-3.5-lite` (1024 dimensions), uses cosine similarity and a
+HNSW index, and returns only the highest result above the explicitly calibrated
+`FAQ_MIN_SIMILARITY` threshold. Scores and alternate candidates never enter the
+assistant context. A below-threshold query returns the established safe
+no-match payload; Voyage, database, or index errors remain tool failures and
+therefore use the existing fail-closed handoff route.
+
+The six short documents are deliberately one document per FAQ/language pair;
+the schema stores source hashes and metadata so longer reviewed FAQ content can
+be chunked later without a table redesign. Arabic translations are committed
+development source content and require business-language review before a real
+customer launch.
+
+For local development, set `VOYAGE_API_KEY`, start Postgres, and explicitly
+index before running the service:
+
+```powershell
+python -m customer_service.retrieval.index_faqs --calibrate
+```
+
+The command creates pgvector schema/indexes, synchronizes added and changed
+documents, removes stale rows, and prints a threshold only if all intended
+fixture matches score above every negative fixture. Put the printed value in
+`FAQ_MIN_SIMILARITY`; the application never guesses or silently retunes it.
+`FAQ_SYNC_ON_STARTUP=true` is a local convenience (shown in `.env.example`) and
+fails clearly when Voyage configuration is invalid. Explicit indexing remains
+the production workflow, where migrations and corpus releases are owned by the
+deployment process rather than application startup.
 
 ## Iteration 5 hardening
 
@@ -164,8 +197,7 @@ evaluation, then executes a two-minute Locust run with 10 concurrent users:
 at least 99% success and p95 end-to-end latency no higher than eight seconds.
 Generated reports are uploaded as CI artifacts, not committed.
 
-Before production, replace the deterministic keyword FAQ lookup with the
-planned retrieval system, replace synthetic promotions and matching heuristics,
+Before production, replace synthetic promotions and matching heuristics,
 introduce a provider-native cache adapter if cached assistant context is needed,
 use a billed Gemini project for representative performance results, and move
 retention leadership out of individual application instances.

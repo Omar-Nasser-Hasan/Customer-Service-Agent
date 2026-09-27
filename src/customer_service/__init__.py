@@ -1,1 +1,1 @@
-"""Iteration 5 hardened customer-service agent package."""
+"""Iteration 6 bilingual semantic FAQ customer-service agent package."""

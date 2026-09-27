@@ -5,3 +5,7 @@ pytest-cache-files-*
 .venv/
 .env
 *.egg-info/
+.wheelhouse/
+.pytest-tmp/
+build/
+pytest-local-temp/

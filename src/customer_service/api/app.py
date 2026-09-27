@@ -31,7 +31,7 @@ def create_app(graph_provider: Callable[[], Any] | None = None) -> FastAPI:
 
     app = FastAPI(
         title="Customer Service Agent",
-        version="0.5.0",
+        version="0.6.0",
         lifespan=None if graph_provider is not None else lifespan,
     )
     app.include_router(health_router)
