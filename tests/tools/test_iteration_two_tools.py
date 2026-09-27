@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from datetime import date
 
-from customer_service.infrastructure.faqs import default_faq_repository
+from customer_service.infrastructure.faqs import FaqEntry
 from customer_service.infrastructure.orders import default_order_repository
 from customer_service.tools.billing import create_billing_tool
 from customer_service.tools.faq_lookup import create_faq_lookup_tool
@@ -53,11 +53,15 @@ def test_returns_calculates_the_14_day_window() -> None:
     assert expired["reason"] == "The 14-day return window has ended."
 
 
-def test_faq_lookup_returns_matches_and_no_match_result() -> None:
-    tool = create_faq_lookup_tool(default_faq_repository())
+async def test_faq_lookup_returns_matches_and_no_match_result() -> None:
+    class Repository:
+        async def search(self, query: str) -> FaqEntry | None:
+            return FaqEntry(id="shipping-times", title="Shipping times", answer="Most orders arrive within 3 to 5 business days after dispatch.") if query == "How long does delivery take?" else None
 
-    shipping = json.loads(tool.invoke({"query": "How long does delivery take?"}))
-    unknown = json.loads(tool.invoke({"query": "Tell me about cryptocurrency mining."}))
+    tool = create_faq_lookup_tool(Repository())
+
+    shipping = json.loads(await tool.ainvoke({"query": "How long does delivery take?"}))
+    unknown = json.loads(await tool.ainvoke({"query": "Tell me about cryptocurrency mining."}))
 
     assert shipping["faq_id"] == "shipping-times"
     assert "3 to 5 business days" in shipping["answer"]

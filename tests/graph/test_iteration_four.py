@@ -19,6 +19,7 @@ from tests.conftest import (
     allowing_safety_judge,
     declining_promo_judge,
     FailingChatModel,
+    StaticFaqRepository,
 )
 
 
@@ -110,12 +111,12 @@ def test_assistant_provider_failure_becomes_handoff() -> None:
     assert state["__interrupt__"]
 
 
-def test_tool_failure_becomes_handoff(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test_tool_failure_becomes_handoff(monkeypatch: pytest.MonkeyPatch) -> None:
     class ExplodingToolNode:
         def __init__(self, *args: object, **kwargs: object) -> None:
             pass
 
-        def invoke(self, state: object) -> dict[str, object]:
+        async def ainvoke(self, state: object) -> dict[str, object]:
             raise RuntimeError("tool backend down")
 
     monkeypatch.setattr("customer_service.graph.build.ToolNode", ExplodingToolNode)
@@ -128,7 +129,7 @@ def test_tool_failure_becomes_handoff(monkeypatch: pytest.MonkeyPatch) -> None:
         ]
     )
     graph = make_graph(model=model)
-    state = graph.invoke(
+    state = await graph.ainvoke(
         {"messages": [HumanMessage(content="How long is shipping?")]},
         config={"configurable": {"thread_id": "tool-failure"}},
     )
@@ -161,7 +162,7 @@ def test_resolving_handoff_clears_escalation_and_allows_a_later_message() -> Non
     assert final_reply(later) == "Support is available for normal questions."
 
 
-def test_successful_tool_answer_still_enters_promo_branch() -> None:
+async def test_successful_tool_answer_still_enters_promo_branch() -> None:
     judge = ScriptedPromoJudge([PromoDecision(include_promo=True, selected_promo_id="DEMO-SHIP-10")])
     graph = build_graph(
         settings=Settings(),
@@ -177,8 +178,9 @@ def test_successful_tool_answer_still_enters_promo_branch() -> None:
         ),
         promo_judge=judge,
         safety_judge=allowing_safety_judge(),
+        faq_repository=StaticFaqRepository(),
     )
-    state = graph.invoke(
+    state = await graph.ainvoke(
         {"messages": [HumanMessage(content="How long is shipping?")]},
         config={"configurable": {"thread_id": "tool-promo"}},
     )

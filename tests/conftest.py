@@ -8,6 +8,7 @@ from langchain_core.outputs import ChatGeneration, ChatResult
 from pydantic import ConfigDict
 
 from customer_service.nodes.promo_judge.node import PromoDecision
+from customer_service.infrastructure.faqs import FaqEntry
 from customer_service.nodes.safety_check.node import SafetyDecision
 
 
@@ -68,6 +69,19 @@ class ScriptedPromoJudge:
 
 def declining_promo_judge() -> ScriptedPromoJudge:
     return ScriptedPromoJudge([PromoDecision(include_promo=False)])
+
+
+class StaticFaqRepository:
+    def __init__(self, entries: dict[str, FaqEntry] | None = None) -> None:
+        self.entries = entries or {
+            "shipping": FaqEntry(id="shipping-times", title="Shipping times", answer="Most orders arrive within 3 to 5 business days after dispatch."),
+        }
+
+    async def search(self, query: str) -> FaqEntry | None:
+        normalized = query.casefold()
+        if normalized in self.entries:
+            return self.entries[normalized]
+        return self.entries.get("shipping") if "shipping" in normalized else None
 
 
 class ScriptedSafetyJudge:

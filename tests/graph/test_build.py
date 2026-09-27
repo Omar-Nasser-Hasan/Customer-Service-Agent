@@ -9,10 +9,10 @@ from customer_service.infrastructure.orders import default_order_repository
 from customer_service.nodes.verify_identity.node import build_node as build_verify_identity_node
 from customer_service.nodes.promo_judge.node import PromoDecision
 from customer_service.state.models import AgentState
-from tests.conftest import ScriptedChatModel, ScriptedPromoJudge, declining_promo_judge
+from tests.conftest import ScriptedChatModel, ScriptedPromoJudge, StaticFaqRepository, declining_promo_judge
 
 
-def test_verified_identity_allows_order_status_then_returns_model_reply() -> None:
+async def test_verified_identity_allows_order_status_then_returns_model_reply() -> None:
     model = ScriptedChatModel(
         responses=[
             AIMessage(content="I'll verify those details first."),
@@ -36,7 +36,7 @@ def test_verified_identity_allows_order_status_then_returns_model_reply() -> Non
         promo_judge=declining_promo_judge(),
     )
 
-    state = graph.invoke(
+    state = await graph.ainvoke(
         {
             "messages": [
                 HumanMessage(
@@ -72,7 +72,7 @@ def test_graph_can_answer_without_calling_a_tool() -> None:
     assert final_reply(state) == "Please send your order ID."
 
 
-def test_faq_lookup_runs_without_identity_verification() -> None:
+async def test_faq_lookup_runs_without_identity_verification() -> None:
     graph = build_graph(
         settings=Settings(),
         repository=default_order_repository(),
@@ -92,9 +92,10 @@ def test_faq_lookup_runs_without_identity_verification() -> None:
             ]
         ),
         promo_judge=declining_promo_judge(),
+        faq_repository=StaticFaqRepository(),
     )
 
-    state = graph.invoke(
+    state = await graph.ainvoke(
         {"messages": [HumanMessage(content="How long is shipping?")]},
         config={"configurable": {"thread_id": "public-faq"}},
     )
@@ -139,7 +140,7 @@ def test_identity_node_requests_missing_order_id_or_email() -> None:
     assert update["messages"][0].content.startswith("To protect your account")
 
 
-def test_premature_account_tool_call_is_intercepted() -> None:
+async def test_premature_account_tool_call_is_intercepted() -> None:
     graph = build_graph(
         settings=Settings(),
         repository=default_order_repository(),
@@ -160,7 +161,7 @@ def test_premature_account_tool_call_is_intercepted() -> None:
         promo_judge=declining_promo_judge(),
     )
 
-    state = graph.invoke(
+    state = await graph.ainvoke(
         {"messages": [HumanMessage(content="Why was I charged for ORD-1001?")]},
         config={"configurable": {"thread_id": "premature-tool"}},
     )
@@ -170,7 +171,7 @@ def test_premature_account_tool_call_is_intercepted() -> None:
     assert final_reply(state).startswith("To protect your account")
 
 
-def test_verification_persists_for_the_entire_thread() -> None:
+async def test_verification_persists_for_the_entire_thread() -> None:
     model = ScriptedChatModel(
         responses=[
             AIMessage(content="I'll verify those details first."),
@@ -196,11 +197,11 @@ def test_verification_persists_for_the_entire_thread() -> None:
     )
     config = {"configurable": {"thread_id": "verified-thread"}}
 
-    first_state = graph.invoke(
+    first_state = await graph.ainvoke(
         {"messages": [HumanMessage(content="Order ORD-1001, email alice@example.com")]},
         config=config,
     )
-    second_state = graph.invoke(
+    second_state = await graph.ainvoke(
         {"messages": [HumanMessage(content="What was I charged?")]},
         config=config,
     )
@@ -335,7 +336,7 @@ def test_malformed_or_unsupported_judge_decision_fails_closed() -> None:
     assert state.get("already_promoted", False) is False
 
 
-def test_promo_judge_never_receives_raw_verified_pii_or_billing_data() -> None:
+async def test_promo_judge_never_receives_raw_verified_pii_or_billing_data() -> None:
     judge = ScriptedPromoJudge(
         [PromoDecision(include_promo=True, selected_promo_id="DEMO-SHIP-10")]
     )
@@ -361,7 +362,7 @@ def test_promo_judge_never_receives_raw_verified_pii_or_billing_data() -> None:
         promo_judge=judge,
     )
 
-    graph.invoke(
+    await graph.ainvoke(
         {
             "messages": [
                 HumanMessage(
