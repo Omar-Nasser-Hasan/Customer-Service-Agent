@@ -14,6 +14,11 @@ from customer_service.infrastructure.orders import default_order_repository
 from customer_service.observability.runtime import ObservabilityRuntime
 from customer_service.services.handoffs import HandoffService
 from customer_service.retrieval.runtime import faq_repository_runtime
+from customer_service.operations.repository import OperationsRepository, operations_repository_runtime
+from customer_service.services.cases import CaseService
+from customer_service.auth.service import StaffAuthService
+from customer_service.realtime.manager import ConnectionManager
+from customer_service.realtime.relay import PostgresCaseEventRelay
 
 LOGGER = logging.getLogger(__name__)
 
@@ -27,6 +32,11 @@ class ApplicationRuntime:
         self.checkpointer: Any | None = None
         self.handoffs: HandoffService | None = None
         self.faq_repository: Any | None = None
+        self.operations: OperationsRepository | None = None
+        self.cases: CaseService | None = None
+        self.auth: StaffAuthService | None = None
+        self.realtime = ConnectionManager()
+        self.relay: PostgresCaseEventRelay | None = None
         self.observability = ObservabilityRuntime(self.settings)
         self._stack = AsyncExitStack()
         self._retention_task: asyncio.Task[None] | None = None
@@ -42,6 +52,12 @@ class ApplicationRuntime:
             faq_repository=self.faq_repository,
         )
         self.handoffs = HandoffService(self.graph)
+        dsn = self.settings.require_secret("POSTGRES_DSN", self.settings.postgres_dsn)
+        self.operations = await self._stack.enter_async_context(operations_repository_runtime(dsn))
+        self.cases = CaseService(self.graph, self.handoffs, self.operations, self.settings)
+        self.auth = StaffAuthService(self.settings, self.operations)
+        self.relay = PostgresCaseEventRelay(dsn, self.realtime)
+        await self.relay.start()
         self.observability.start()
         self._retention_task = asyncio.create_task(
             self._retention_loop(), name="customer-service-retention"
@@ -54,6 +70,8 @@ class ApplicationRuntime:
                 await self._retention_task
             except asyncio.CancelledError:
                 pass
+        if self.relay is not None:
+            await self.relay.stop()
         await self._stack.aclose()
 
     async def prune_expired_threads(self) -> list[str]:
@@ -70,6 +88,8 @@ class ApplicationRuntime:
             try:
                 async with self._retention_lock:
                     deleted = await self.prune_expired_threads()
+                    if self.operations is not None:
+                        await self.operations.prune_resolved(self.settings.checkpoint_retention_days)
                     LOGGER.info("retention_completed", extra={"deleted_threads": len(deleted)})
             except asyncio.CancelledError:
                 raise

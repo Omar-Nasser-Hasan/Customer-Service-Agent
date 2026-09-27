@@ -1,0 +1,2 @@
+"""Authenticated staff inbox routes."""
+

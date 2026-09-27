@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from customer_service.graph.response import final_reply
 from customer_service.observability.runtime import ObservabilityRuntime
+from customer_service.services.cases import CaseService
 
 
 class IncomingMessage(BaseModel):
@@ -38,6 +39,7 @@ def _handoff_is_active(state: dict[str, object]) -> bool:
 def create_router(
     graph_provider: Callable[[], Any],
     observability_provider: Callable[[], ObservabilityRuntime] | None = None,
+    case_service_provider: Callable[[], CaseService] | None = None,
 ) -> APIRouter:
     router = APIRouter(prefix="/conversations", tags=["bot"])
 
@@ -55,7 +57,10 @@ def create_router(
         if _handoff_is_active(snapshot.values):
             # The graph remains paused, but customer activity still resets the
             # retention clock for an open case.
-            await graph.aupdate_state(config, {"last_activity_at": datetime.now(UTC)})
+            if case_service_provider is not None:
+                await case_service_provider().record_active_customer_message(thread_id, incoming.message)
+            else:
+                await graph.aupdate_state(config, {"messages": [HumanMessage(content=incoming.message)], "last_activity_at": datetime.now(UTC)})
             response.status_code = 202
             return ConversationResponse(thread_id=thread_id, status="handoff_active", reply=None)
 
@@ -64,6 +69,8 @@ def create_router(
             config=config,
         )
         if _handoff_is_active(state):
+            if case_service_provider is not None:
+                await case_service_provider().reconcile_handoff(thread_id, state)
             response.status_code = 202
             return ConversationResponse(
                 thread_id=thread_id,
