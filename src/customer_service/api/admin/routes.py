@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Cookie, Depends, Header, HTTPException, Request, Response, WebSocket, WebSocketDisconnect

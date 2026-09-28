@@ -22,6 +22,12 @@ class WhatsAppWorker:
                 await self.runtime.operations.complete_webhook(event["provider_event_id"])
             except Exception as error:
                 LOGGER.warning("webhook_processing_failed", extra={"error_type": type(error).__name__})
+                await self.runtime.operations.retry_webhook(
+                    event["provider_event_id"],
+                    event["attempts"],
+                    self.runtime.settings.worker_max_attempts,
+                    error,
+                )
         for outbox in await self.runtime.operations.claim_outbox():
             try:
                 encrypted = await self.runtime.operations.encrypted_phone(outbox.thread_id)
@@ -72,6 +78,7 @@ class WhatsAppWorker:
 async def main() -> None:
     runtime = ApplicationRuntime()
     await runtime.start()
+    await runtime.operations.recover_interrupted_work()
     worker = WhatsAppWorker(runtime)
     try:
         while True:

@@ -13,7 +13,7 @@ import json
 import asyncio
 import sys
 from typing import AsyncIterator, Iterable
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool
@@ -114,8 +114,14 @@ ALTER TABLE websocket_tokens ADD COLUMN IF NOT EXISTS staff_email TEXT;
 """
 
 
-def _case(row: dict) -> CaseRecord:
-    return CaseRecord(**row)
+def _model_values(row: dict[str, object]) -> dict[str, object]:
+    """Adapt Psycopg UUID objects to the string IDs exposed by our API models."""
+
+    return {key: str(value) if isinstance(value, UUID) else value for key, value in row.items()}
+
+
+def _case(row: dict[str, object]) -> CaseRecord:
+    return CaseRecord(**_model_values(row))
 
 
 class OperationsRepository:
@@ -180,7 +186,7 @@ class OperationsRepository:
         async with self.pool.connection() as conn:
             async with conn.cursor(row_factory=dict_row) as cur:
                 await cur.execute("SELECT * FROM case_messages WHERE case_id=%s ORDER BY created_at", (case_id,))
-                return [CaseMessage(**row) for row in await cur.fetchall()]
+                return [CaseMessage(**_model_values(row)) for row in await cur.fetchall()]
 
     async def claim(self, case_id: str, actor: StaffIdentity, version: int) -> CaseRecord:
         return await self._ownership_change(case_id, actor, version, "claim")
@@ -235,7 +241,7 @@ class OperationsRepository:
                 await cur.execute("UPDATE support_cases SET updated_at=now(), version=version+1 WHERE case_id=%s RETURNING version", (case_id,))
                 version = (await cur.fetchone())["version"]
             await conn.commit()
-        result = CaseMessage(**row)
+        result = CaseMessage(**_model_values(row))
         await self.notify(CaseEvent(event="message", case_id=case_id, version=version, message_id=result.message_id))
         return result
 
@@ -251,7 +257,7 @@ class OperationsRepository:
                 )
                 row = await cur.fetchone()
             await conn.commit()
-        return OutboxRecord(**row)
+        return OutboxRecord(**_model_values(row))
 
     async def record_contact(self, thread_id: str, encrypted_phone: str, received_at: datetime | None = None) -> None:
         async with self.pool.connection() as conn:
@@ -298,7 +304,7 @@ class OperationsRepository:
         async with self.pool.connection() as conn:
             async with conn.cursor(row_factory=dict_row) as cur:
                 await cur.execute("""WITH claimed AS (SELECT provider_event_id FROM webhook_events
-                  WHERE status='pending' AND next_attempt_at <= now() ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT %s)
+                  WHERE status IN ('pending','retry') AND next_attempt_at <= now() ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT %s)
                   UPDATE webhook_events e SET status='processing', attempts=attempts+1 FROM claimed
                   WHERE e.provider_event_id=claimed.provider_event_id RETURNING e.*""", (limit,))
                 rows = await cur.fetchall()
@@ -311,6 +317,17 @@ class OperationsRepository:
                 await cur.execute("UPDATE webhook_events SET status='done',processed_at=now() WHERE provider_event_id=%s", (event_id,))
             await conn.commit()
 
+    async def retry_webhook(self, event_id: str, attempts: int, max_attempts: int, error: Exception) -> None:
+        status = "failed" if attempts >= max_attempts else "retry"
+        next_at = datetime.now(UTC) + timedelta(seconds=min(300, 2 ** attempts))
+        async with self.pool.connection() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute(
+                    "UPDATE webhook_events SET status=%s,next_attempt_at=%s WHERE provider_event_id=%s",
+                    (status, next_at, event_id),
+                )
+            await conn.commit()
+
     async def claim_outbox(self, limit: int = 20) -> list[OutboxRecord]:
         async with self.pool.connection() as conn:
             async with conn.cursor(row_factory=dict_row) as cur:
@@ -320,7 +337,7 @@ class OperationsRepository:
                   WHERE o.outbox_id=claimed.outbox_id RETURNING o.*""", (limit,))
                 rows = await cur.fetchall()
             await conn.commit()
-        return [OutboxRecord(**row) for row in rows]
+        return [OutboxRecord(**_model_values(row)) for row in rows]
 
     async def complete_outbox(self, outbox_id: str, provider_message_id: str) -> None:
         async with self.pool.connection() as conn:
@@ -356,11 +373,28 @@ class OperationsRepository:
 
     async def consume_ws_token(self, token_id: str, staff_sub: str) -> str | None:
         async with self.pool.connection() as conn:
-            async with conn.cursor() as cur:
+            async with conn.cursor(row_factory=dict_row) as cur:
                 await cur.execute("UPDATE websocket_tokens SET used_at=now() WHERE token_id=%s AND staff_sub=%s AND used_at IS NULL AND expires_at > now() RETURNING staff_email", (token_id, staff_sub))
                 row = await cur.fetchone()
             await conn.commit()
         return row["staff_email"] if row else None
+
+    async def recover_interrupted_work(self) -> None:
+        """Return unsent outbound work leased by a crashed worker to retry.
+
+        Webhook processing performs several durable writes before it can be
+        marked complete. Replaying an event that was interrupted after its
+        reply was queued could therefore send a customer the same answer
+        twice. Ordinary processing failures are explicitly retried by the
+        worker; processing webhook rows left by a hard process stop remain
+        available for deliberate operator reconciliation until source-event
+        idempotency is added.
+        """
+
+        async with self.pool.connection() as conn:
+            async with conn.cursor() as cur:
+                await cur.execute("UPDATE outbound_outbox SET status='retry', next_attempt_at=now(), updated_at=now() WHERE status='processing'")
+            await conn.commit()
 
     async def prune_resolved(self, days: int = 90) -> int:
         async with self.pool.connection() as conn:
