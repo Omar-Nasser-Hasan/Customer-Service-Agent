@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-
+import time
 from customer_service.api.dependencies import ApplicationRuntime
 from customer_service.graph.response import final_reply
 from customer_service.transport.whatsapp import WhatsAppTransport
@@ -62,7 +62,22 @@ class WhatsAppWorker:
         if snapshot.values.get("escalated") and snapshot.values.get("case_status") in {"open", "claimed"}:
             await self.runtime.cases.record_active_customer_message(thread_id, content, message_id=message.get("id"))
             return
+        # Only shown when we're actually about to reply, matching Meta's
+        # guidance. A failed typing-indicator call is cosmetic and must
+        # never block or break the real reply.
+        if event_id := message.get("id"):
+            try:
+                await self.transport.send_typing_indicator(str(event_id))
+            except Exception as error:
+                LOGGER.warning("typing_indicator_failed", extra={"error_type": type(error).__name__})
+        # This is currently the only place tracing callbacks are attached for
+        # WhatsApp-originated turns. Without this line, LANGSMITH_TRACING=true
+        # has no effect on messages that arrive over WhatsApp — the API path
+        # attaches its own callbacks separately in api/bot/conversations.py.
+        config["callbacks"] = self.runtime.observability.callbacks(thread_id)
+        started = time.monotonic()
         state = await self.runtime.graph.ainvoke({"messages": [("human", content)]}, config=config)
+        LOGGER.info("graph_invoke_completed", extra={"elapsed_seconds": round(time.monotonic() - started, 2)})
         if state.get("escalated") and state.get("case_status") in {"open", "claimed"}:
             await self.runtime.cases.reconcile_handoff(thread_id, state)
         reply = final_reply(state)

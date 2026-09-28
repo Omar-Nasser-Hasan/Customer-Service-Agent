@@ -48,5 +48,30 @@ class WhatsAppTransport:
         data = response.json()
         return str(data["messages"][0]["id"])
 
+    async def send_typing_indicator(self, message_id: str) -> None:
+        """Mark an inbound message read and show typing, per Meta's typing-indicator API.
+
+        Auto-dismissed once we send our real reply, or after 25 seconds,
+        whichever comes first. Unlike send(), the response carries no
+        message id of its own, so nothing is parsed from it.
+        """
+
+        access_token = self.settings.require_secret("META_ACCESS_TOKEN", self.settings.meta_access_token)
+        phone_id = self.settings.meta_phone_number_id
+        if not phone_id:
+            raise ValueError("Missing required configuration: META_PHONE_NUMBER_ID")
+        body = {
+            "messaging_product": "whatsapp",
+            "status": "read",
+            "message_id": message_id,
+            "typing_indicator": {"type": "text"},
+        }
+        response = await self.client.post(
+            f"https://graph.facebook.com/{self.settings.meta_graph_api_version}/{phone_id}/messages",
+            headers={"Authorization": f"Bearer {access_token}"},
+            json=body,
+        )
+        response.raise_for_status()
+
     async def close(self) -> None:
         await self.client.aclose()
