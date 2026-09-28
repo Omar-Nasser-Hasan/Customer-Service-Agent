@@ -40,19 +40,31 @@ class CaseService:
         return case
 
     async def _backfill_visible_messages(self, case: CaseRecord, state: dict[str, object]) -> None:
-        existing = {message.message_id for message in await self.repository.messages(case.case_id)}
+        recorded = await self.repository.messages(case.case_id)
+        existing = {message.message_id for message in recorded} | {
+            message.provider_message_id for message in recorded if message.provider_message_id
+        }
         for message in state.get("messages", []):
             if not isinstance(message, (HumanMessage, AIMessage)) or not getattr(message, "id", None) or message.id in existing:
                 continue
             content = str(message.content)
             if content:
-                await self.repository.add_message(case.case_id, "customer" if isinstance(message, HumanMessage) else "bot", content, message_id=message.id)
+                await self.repository.add_message(
+                    case.case_id,
+                    "customer" if isinstance(message, HumanMessage) else "bot",
+                    content,
+                    provider_message_id=message.id,
+                )
 
     async def record_active_customer_message(self, thread_id: str, content: str, message_id: str | None = None) -> CaseMessage | None:
         config = {"configurable": {"thread_id": thread_id}}
         await self.graph.aupdate_state(config, {"messages": [HumanMessage(content=content, id=message_id)], "last_activity_at": datetime.now(UTC)})
         case = await self.repository.get_by_thread(thread_id)
-        return await self.repository.add_message(case.case_id, "customer", content, message_id=message_id) if case else None
+        return (
+            await self.repository.add_message(case.case_id, "customer", content, provider_message_id=message_id)
+            if case
+            else None
+        )
 
     async def claim(self, case_id: str, actor: StaffIdentity, version: int) -> CaseRecord:
         case = await self.repository.claim(case_id, actor, version)

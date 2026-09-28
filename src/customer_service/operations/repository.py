@@ -227,15 +227,17 @@ class OperationsRepository:
         raise CasePermissionError(f"{actor.email} does not own this case")
 
     async def add_message(self, case_id: str, direction: str, content: str, *, author: StaffIdentity | None = None,
-                          delivery_status: str = "pending", message_id: str | None = None) -> CaseMessage:
+                          delivery_status: str = "pending", message_id: str | None = None,
+                          provider_message_id: str | None = None) -> CaseMessage:
         message_id = message_id or str(uuid4())
         async with self.pool.connection() as conn:
             async with conn.cursor(row_factory=dict_row) as cur:
                 await cur.execute(
-                    """INSERT INTO case_messages(message_id,case_id,direction,content,author_sub,delivery_status)
-                    VALUES(%s,%s,%s,%s,%s,%s) ON CONFLICT(message_id) DO UPDATE SET content=EXCLUDED.content
+                    """INSERT INTO case_messages(message_id,case_id,direction,content,author_sub,delivery_status,provider_message_id)
+                    VALUES(%s,%s,%s,%s,%s,%s,%s)
+                    ON CONFLICT (provider_message_id) DO UPDATE SET content = EXCLUDED.content
                     RETURNING *""",
-                    (message_id, case_id, direction, content, actor.sub if author else None, delivery_status),
+                    (message_id, case_id, direction, content, author.sub if author else None, delivery_status, provider_message_id),
                 )
                 row = await cur.fetchone()
                 await cur.execute("UPDATE support_cases SET updated_at=now(), version=version+1 WHERE case_id=%s RETURNING version", (case_id,))
