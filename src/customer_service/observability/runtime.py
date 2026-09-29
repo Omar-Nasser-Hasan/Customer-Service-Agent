@@ -49,6 +49,14 @@ class ObservabilityRuntime:
         if self._client is None or not self._sampled(thread_id):
             return []
         return [_RedactingLangSmithHandler(self, thread_id)]
+    
+    def thread_reference(self, thread_id: str) -> str:
+        """A stable, non-reversible id safe to place in ordinary application
+        logs — derived the same way trace metadata is, so a log line and its
+        matching LangSmith run can be lined up by eye without ever writing
+        the real thread id anywhere outside the database."""
+
+        return stable_thread_reference(thread_id, self._salt())
 
     def mark_failure(self, error: Exception) -> None:
         self._status = "degraded"
