@@ -10,7 +10,7 @@ from psycopg.rows import dict_row
 
 from customer_service.config.settings import Settings, WhatsAppTemplate
 from customer_service.operations.models import CaseEvent, CaseMessage, CaseRecord, StaffIdentity
-from customer_service.operations.repository import CaseConflictError, CasePermissionError, OperationsRepository
+from customer_service.operations.repository import CaseConflictError, CasePermissionError, OperationsRepository, _model_values
 from customer_service.services.handoffs import HandoffNotOpenError, HandoffService
 
 
@@ -106,7 +106,7 @@ class CaseService:
             await conn.commit()
         if not row:
             raise CaseConflictError("case changed while resolving")
-        result = CaseRecord(**row)
+        result = CaseRecord(**_model_values(row))
         await self.repository.audit(case_id, actor, "case_resolved")
         await self.repository.notify(CaseEvent(event="case_updated", case_id=case_id, version=result.version))
         return result
