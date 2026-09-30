@@ -14,5 +14,6 @@ def create_chat_model(node_name: str, settings: Settings) -> ChatGoogleGenerativ
             model=config.model,
             google_api_key=settings.require_secret("GOOGLE_API_KEY", settings.google_api_key),
             temperature=config.temperature,
+            **({"thinking_budget": config.thinking_budget} if config.thinking_budget is not None else {}),
         )
     raise ValueError(f"Unsupported model provider: {config.provider}")

@@ -22,6 +22,7 @@ class NodeModelConfig(BaseModel):
     provider: ModelProvider
     model: str
     temperature: float = Field(default=0, ge=0, le=2)
+    thinking_budget: int | None = Field(default=None, ge=0)
 
 
 class WhatsAppTemplate(BaseModel):
@@ -63,6 +64,7 @@ class Settings(BaseSettings):
             "safety_check": NodeModelConfig(
                 provider=ModelProvider.GOOGLE_GENAI,
                 model="gemini-3.1-flash-lite",
+                thinking_budget=0,
             ),
             "eval_judge": NodeModelConfig(
                 provider=ModelProvider.GOOGLE_GENAI,
@@ -123,7 +125,7 @@ class Settings(BaseSettings):
         defaults = {
             "assistant": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
             "promo_judge": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3-flash-preview"),
-            "safety_check": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
+            "safety_check": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite", thinking_budget=0),
             "eval_judge": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
         }
         for name, default in defaults.items():
