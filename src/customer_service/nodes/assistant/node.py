@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Callable
 from uuid import uuid4
-
+from datetime import UTC, datetime
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, SystemMessage
 from langchain_core.tools import BaseTool
@@ -23,9 +23,12 @@ def build_node(
     def assistant(state: AgentState) -> dict[str, object]:
         verification_context = SystemMessage(
             content=(
-                "Internal verification context: this conversation is verified for account-specific support."
-                if state.verified
-                else "Internal verification context: this conversation is not verified."
+                f"Internal context. Today's date: {datetime.now(UTC).date().isoformat()}. "
+                + (
+                    f"This conversation is verified for order {state.customer.order_id} only."
+                    if state.verified
+                    else "This conversation is not verified."
+                )
             )
         )
         try:
