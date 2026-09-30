@@ -116,12 +116,12 @@ class _RedactingLangSmithHandler(BaseCallbackHandler):
 
     def _end(self, outputs: Any, run_id: UUID, error: BaseException | None = None) -> None:
         try:
-            kwargs: dict[str, Any] = {"id": run_id, "end_time": datetime.now(UTC)}
+            kwargs: dict[str, Any] = {"end_time": datetime.now(UTC)}
             if error is not None:
                 kwargs["error"] = type(error).__name__
             else:
                 kwargs["outputs"] = sanitize_for_trace(outputs, thread_id_salt=self.runtime._salt())
-            self.runtime._client.update_run(**kwargs)
+            self.runtime._client.update_run(run_id, **kwargs)
         except Exception as callback_error:
             self.runtime.mark_failure(callback_error)
 
