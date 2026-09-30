@@ -6,8 +6,8 @@ import time
 from customer_service.api.dependencies import ApplicationRuntime
 from customer_service.graph.response import final_reply
 from customer_service.transport.whatsapp import WhatsAppTransport
-
-LOGGER = logging.getLogger(__name__)
+from customer_service.observability.logs import configure_logging
+LOGGER = logging.getLogger("customer_service.worker")
 
 
 class WhatsAppWorker:
@@ -113,6 +113,7 @@ class WhatsAppWorker:
 
 
 async def main() -> None:
+    configure_logging()
     runtime = ApplicationRuntime()
     await runtime.start()
     await runtime.operations.recover_interrupted_work()

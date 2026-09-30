@@ -15,11 +15,11 @@ from customer_service.config.settings import get_settings
 from customer_service.api.health import router as health_router
 from customer_service.api.admin.routes import create_router as create_admin_router
 from customer_service.api.bot.whatsapp import create_router as create_whatsapp_router
-
+from customer_service.observability.logs import configure_logging
 
 def create_app(graph_provider: Callable[[], Any] | None = None) -> FastAPI:
     """Create a production app or a dependency-injected test app."""
-
+    configure_logging()
     runtime: ApplicationRuntime | None = None
 
     @asynccontextmanager
