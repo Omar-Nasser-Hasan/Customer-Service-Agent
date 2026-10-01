@@ -112,6 +112,19 @@ class Settings(BaseSettings):
     meta_phone_number_id: str | None = None
     meta_access_token: SecretStr | None = None
 
+    # Fast safety classifier (Jev, served through OpenRouter). When disabled,
+    # Gemini makes every safety decision that the keyword rules do not.
+    jev_enabled: bool = False
+    openrouter_api_key: SecretStr | None = None
+    jev_model: str = "typesafe/jev-1.13"
+    jev_url: str = "https://openrouter.ai/api/alpha/decisions"
+    jev_timeout_seconds: float = Field(default=1.5, ge=0.1, le=10)
+    # A score at or above this is a firm alarm; every score below `clear` is a
+    # firm allow. Anything in between goes to Gemini.
+    jev_act_threshold: float = Field(default=0.8, gt=0, le=1)
+    jev_clear_threshold: float = Field(default=0.2, ge=0, lt=1)
+    jev_max_message_chars: int = Field(default=600, ge=1, le=4_000)
+
     @model_validator(mode="after")
     def ensure_default_node_models(self) -> "Settings":
         """Merge newly introduced node defaults with partial env mappings.
@@ -131,6 +144,12 @@ class Settings(BaseSettings):
         }
         for name, default in defaults.items():
             self.node_models.setdefault(name, default)
+        return self
+
+    @model_validator(mode="after")
+    def jev_thresholds_must_leave_an_unsure_band(self) -> "Settings":
+        if self.jev_clear_threshold >= self.jev_act_threshold:
+            raise ValueError("JEV_CLEAR_THRESHOLD must be lower than JEV_ACT_THRESHOLD")
         return self
 
     def model_for(self, node_name: str) -> NodeModelConfig:

@@ -24,11 +24,12 @@ from customer_service.nodes.promo_judge.node import (
     create_structured_judge,
 )
 from customer_service.nodes.promo_prefilter.node import build_node as build_promo_prefilter_node
-from customer_service.nodes.safety_check.node import (
+from customer_service.nodes.safety_check.gemini import (
     SafetyJudge,
-    build_node as build_safety_check_node,
     create_structured_judge as create_structured_safety_judge,
 )
+from customer_service.nodes.safety_check.jev import JevJudge
+from customer_service.nodes.safety_check.node import Classifier, build_node as build_safety_check_node
 from customer_service.nodes.tool_dispatch.node import build_node as build_tool_dispatch_node
 from customer_service.nodes.verify_identity.node import (
     build_node as build_verify_identity_node,
@@ -51,6 +52,7 @@ def build_graph(
     model: BaseChatModel | None = None,
     promo_judge: PromoJudge | None = None,
     safety_judge: SafetyJudge | None = None,
+    jev_judge: Classifier | None = None,
     checkpointer: BaseCheckpointSaver | None = None,
 ):
     """Build the Iteration 4 safety, support, promotion, and handoff graph."""
@@ -80,11 +82,17 @@ def build_graph(
     promotion_repository = promotion_repository or default_promotion_repository()
     judge = promo_judge or create_structured_judge(create_chat_model("promo_judge", settings))
     # Injected assistant models are offline deterministic test doubles. Keep
-    # their unrelated graph tests independent of a live safety provider.
+    # their unrelated graph tests independent of live safety providers.
+    live_safety = safety_judge is None and model is None
     safety = safety_judge or (
-        _AllowSafetyJudge()
-        if model is not None
-        else create_structured_safety_judge(create_chat_model("safety_check", settings))
+        create_structured_safety_judge(create_chat_model("safety_check", settings))
+        if live_safety
+        else _AllowSafetyJudge()
+    )
+    # Jev is the fast first pass and Gemini the fallback. It is built only for
+    # a live graph, or when a test injects one explicitly.
+    jev = jev_judge or (
+        JevJudge.from_settings(settings) if settings.jev_enabled and live_safety else None
     )
     # Do not turn a backend error into a customer-visible ToolMessage: the
     # wrapper below must fail closed into a handoff.
@@ -119,7 +127,7 @@ def build_graph(
         return "promo_judge" if state.promo_matches else "format_response"
 
     graph = StateGraph(AgentState)
-    graph.add_node("safety_check", build_safety_check_node(settings=settings, judge=safety))
+    graph.add_node("safety_check", build_safety_check_node(settings=settings, judge=safety, jev=jev))
     graph.add_node(
         "assistant",
         build_assistant_node(settings=settings, model=assistant_model, tools=tools),
