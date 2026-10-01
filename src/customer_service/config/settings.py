@@ -65,6 +65,7 @@ class Settings(BaseSettings):
                 provider=ModelProvider.GOOGLE_GENAI,
                 model="gemini-3.1-flash-lite",
                 thinking_budget=0,
+                thinking_level="minimal"
             ),
             "eval_judge": NodeModelConfig(
                 provider=ModelProvider.GOOGLE_GENAI,
@@ -125,7 +126,7 @@ class Settings(BaseSettings):
         defaults = {
             "assistant": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
             "promo_judge": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3-flash-preview"),
-            "safety_check": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite", thinking_budget=0),
+            "safety_check": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite", thinking_budget=0, thinking_level="minimal"),
             "eval_judge": NodeModelConfig(provider=ModelProvider.GOOGLE_GENAI, model="gemini-3.1-flash-lite"),
         }
         for name, default in defaults.items():
