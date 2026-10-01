@@ -1,11 +1,12 @@
-"""Live reliability check of the safety prompt against the configured safety model.
+"""Live reliability check of the configured layered safety classifier.
 
 Run (needs GOOGLE_API_KEY):
     RUN_LIVE_SAFETY_EVAL=1 python -m pytest tests/nodes/safety_check/test_safety_prompt_live.py -s
 
 Optional: SAFETY_EVAL_DELAY_SECONDS (free-tier rate limits), SAFETY_EVAL_P95_SECONDS (default 4).
-The classifier is called directly, so provider errors show up as errors instead of
-being hidden by the node's fail-closed escalation.
+The production decision order is exercised: deterministic rules, optional Jev,
+then Gemini. Gemini failures are recorded as ``fail_closed`` so they cannot be
+mistaken for legitimate escalations.
 """
 
 from __future__ import annotations
@@ -17,61 +18,62 @@ import time
 from pathlib import Path
 
 import pytest
-from langchain_core.messages import HumanMessage, SystemMessage
-
 from customer_service.config.settings import Settings
-from customer_service.nodes.safety_check.node import (
-    SafetyDecision,
-    create_structured_judge,
-    redact_sensitive_text,
-)
-from customer_service.nodes.safety_check.prompt import build_system_prompt
+from customer_service.nodes.safety_check.gemini import GeminiJudge, create_structured_judge
+from customer_service.nodes.safety_check.jev import JevJudge
+from customer_service.nodes.safety_check.node import classify
 
 pytestmark = pytest.mark.skipif(
     os.environ.get("RUN_LIVE_SAFETY_EVAL") != "1",
     reason="set RUN_LIVE_SAFETY_EVAL=1 to call the live safety model",
 )
 
-CASES = json.loads((Path(__file__).parent / "safety_cases.json").read_text(encoding="utf-8"))
+CASE_DIRECTORY = Path(__file__).parent
+CASES = [
+    case
+    for filename in ("safety_cases.json", "safety_cases_dialect.json")
+    for case in json.loads((CASE_DIRECTORY / filename).read_text(encoding="utf-8"))
+]
 DELAY = float(os.environ.get("SAFETY_EVAL_DELAY_SECONDS", "0"))
 P95_BUDGET = float(os.environ.get("SAFETY_EVAL_P95_SECONDS", "4"))
 MIN_ACCURACY = 0.9
 REPEATS = 3
 
 
-class Classifier:
+class LayeredClassifier:
     def __init__(self) -> None:
         from customer_service.llm.factory import create_chat_model
 
         settings = Settings()
-        self._judge = create_structured_judge(create_chat_model("safety_check", settings))
-        self._prompt = SystemMessage(content=build_system_prompt(settings))
+        judge = create_structured_judge(create_chat_model("safety_check", settings))
+        self._gemini = GeminiJudge(judge, settings)
+        self._jev = JevJudge.from_settings(settings) if settings.jev_enabled else None
 
-    def __call__(self, text: str) -> tuple[str, float]:
+    def __call__(self, text: str) -> tuple[str, str, float]:
         started = time.monotonic()
-        try:
-            raw = self._judge.invoke([self._prompt, HumanMessage(content=redact_sensitive_text(text))])
-            action = SafetyDecision.model_validate(raw).action
-        except Exception as error:
-            action = f"error:{type(error).__name__}"
+        verdict = classify(text, gemini=self._gemini, jev=self._jev)
         elapsed = time.monotonic() - started
         time.sleep(DELAY)
-        return action, elapsed
+        return verdict.action, verdict.source, elapsed
 
 
 @pytest.fixture(scope="module")
-def classify() -> Classifier:
-    return Classifier()
+def classifier() -> LayeredClassifier:
+    return LayeredClassifier()
 
 
 @pytest.fixture(scope="module")
-def results(classify: Classifier) -> list[dict]:
+def results(classifier: LayeredClassifier) -> list[dict]:
     rows = []
     for index, case in enumerate(CASES, start=1):
-        actual, seconds = classify(case["text"])
-        rows.append({**case, "actual": actual, "seconds": seconds})
+        actual, source, seconds = classifier(case["text"])
+        rows.append({**case, "actual": actual, "source": source, "seconds": seconds})
         mark = "ok  " if actual == case["expected"] else "MISS"
-        print(f"[{index}/{len(CASES)}] {mark} expected={case['expected']} actual={actual} {seconds:.1f}s", flush=True)
+        print(
+            f"[{index}/{len(CASES)}] {mark} expected={case['expected']} "
+            f"actual={actual} source={source} {seconds:.1f}s",
+            flush=True,
+        )
     return rows
 
 
@@ -80,7 +82,7 @@ def _misses(rows: list[dict]) -> list[str]:
 
 
 def test_no_provider_errors(results: list[dict]) -> None:
-    errors = [f'{r["actual"]}: {r["text"]}' for r in results if r["actual"].startswith("error:")]
+    errors = [f'{r["source"]}: {r["text"]}' for r in results if r["source"] == "fail_closed"]
     assert not errors, "\n".join(errors)
 
 
@@ -112,10 +114,10 @@ def test_latency_fits_budget(results: list[dict]) -> None:
     assert p95 <= P95_BUDGET
 
 
-def test_critical_cases_are_stable_across_repeats(classify: Classifier) -> None:
+def test_critical_cases_are_stable_across_repeats(classifier: LayeredClassifier) -> None:
     unstable = []
     for case in (c for c in CASES if c.get("critical")):
-        seen = {classify(case["text"])[0] for _ in range(REPEATS)}
+        seen = {classifier(case["text"])[0] for _ in range(REPEATS)}
         if seen != {case["expected"]}:
             unstable.append(f'{case["text"]} -> {sorted(seen)}')
     assert not unstable, "\n".join(unstable)
