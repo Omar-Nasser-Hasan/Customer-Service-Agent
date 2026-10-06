@@ -34,6 +34,15 @@ def create_app(graph_provider: Callable[[], Any] | None = None) -> FastAPI:
             await runtime.stop()
 
     settings = get_settings()
+    # The conversations endpoint takes any thread ID, so an anonymous caller
+    # could otherwise mint fresh threads to dodge the per-thread failure limit.
+    # Production therefore refuses to start without an API key.
+    api_key: str | None = None
+    if graph_provider is None:
+        if settings.app_environment == "production":
+            api_key = settings.require_secret("BOT_API_KEY", settings.bot_api_key)
+        elif settings.bot_api_key is not None:
+            api_key = settings.bot_api_key.get_secret_value() or None
     app = FastAPI(
         title="Customer Service Agent",
         version="0.8.0",
@@ -52,6 +61,7 @@ def create_app(graph_provider: Callable[[], Any] | None = None) -> FastAPI:
             graph_provider or (lambda: runtime.graph),
             observability_provider=None if graph_provider is not None else (lambda: runtime.observability),
             case_service_provider=None if graph_provider is not None else (lambda: runtime.cases),
+            api_key=api_key,
         )
     )
     if graph_provider is None:

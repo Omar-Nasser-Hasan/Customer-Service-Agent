@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import secrets
 from datetime import UTC, datetime
 from typing import Annotated, Any, Callable, Literal
 
-from fastapi import APIRouter, Path, Response
+from fastapi import APIRouter, Depends, Header, HTTPException, Path, Response
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -40,8 +41,24 @@ def create_router(
     graph_provider: Callable[[], Any],
     observability_provider: Callable[[], ObservabilityRuntime] | None = None,
     case_service_provider: Callable[[], CaseService] | None = None,
+    api_key: str | None = None,
 ) -> APIRouter:
-    router = APIRouter(prefix="/conversations", tags=["bot"])
+    """``api_key`` protects the endpoint. None leaves it open for local development.
+
+    WhatsApp traffic never uses this endpoint (the worker calls the graph
+    directly), so the key only gates the evaluation CLI, load tests, local
+    development, and any future web chat that calls it from a trusted backend.
+    """
+
+    async def require_api_key(x_api_key: Annotated[str | None, Header()] = None) -> None:
+        if api_key is None:
+            return
+        if not x_api_key or not secrets.compare_digest(x_api_key.encode(), api_key.encode()):
+            raise HTTPException(status_code=401, detail="A valid API key is required")
+
+    router = APIRouter(
+        prefix="/conversations", tags=["bot"], dependencies=[Depends(require_api_key)]
+    )
 
     @router.post("/{thread_id}/messages", response_model=ConversationResponse)
     async def send_message(
