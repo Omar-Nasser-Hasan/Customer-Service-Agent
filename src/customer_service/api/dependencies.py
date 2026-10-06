@@ -19,6 +19,7 @@ from customer_service.services.cases import CaseService
 from customer_service.auth.service import StaffAuthService
 from customer_service.realtime.manager import ConnectionManager
 from customer_service.realtime.relay import PostgresCaseEventRelay
+from customer_service.verification.attempts import PostgresAttemptLimiter, postgres_attempt_limiter
 
 LOGGER = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ class ApplicationRuntime:
         self.checkpointer: Any | None = None
         self.handoffs: HandoffService | None = None
         self.faq_repository: Any | None = None
+        self.attempt_limiter: PostgresAttemptLimiter | None = None
         self.operations: OperationsRepository | None = None
         self.cases: CaseService | None = None
         self.auth: StaffAuthService | None = None
@@ -42,17 +44,36 @@ class ApplicationRuntime:
         self._retention_task: asyncio.Task[None] | None = None
         self._retention_lock = asyncio.Lock()
 
+    def _verification_hash_key(self) -> str:
+        """Key for hashing emails and order IDs in the shared failure table."""
+
+        secret = self.settings.verification_hash_key
+        if secret is not None and secret.get_secret_value():
+            return secret.get_secret_value()
+        if self.settings.app_environment == "production":
+            raise ValueError("Missing required configuration: VERIFICATION_HASH_KEY")
+        return "local-development-verification-key"
+
     async def start(self) -> None:
+        dsn = self.settings.require_secret("POSTGRES_DSN", self.settings.postgres_dsn)
         self.checkpointer = await self._stack.enter_async_context(postgres_checkpointer(self.settings))
         self.faq_repository = await self._stack.enter_async_context(faq_repository_runtime(self.settings))
+        # Failed identity checks are counted across threads and channels.
+        self.attempt_limiter = await self._stack.enter_async_context(
+            postgres_attempt_limiter(
+                dsn,
+                hash_key=self._verification_hash_key(),
+                limit=self.settings.verification_key_failure_limit,
+            )
+        )
         self.graph = build_graph(
             settings=self.settings,
             repository=default_order_repository(),
             checkpointer=self.checkpointer,
             faq_repository=self.faq_repository,
+            attempt_limiter=self.attempt_limiter,
         )
         self.handoffs = HandoffService(self.graph)
-        dsn = self.settings.require_secret("POSTGRES_DSN", self.settings.postgres_dsn)
         self.operations = await self._stack.enter_async_context(operations_repository_runtime(dsn))
         self.cases = CaseService(self.graph, self.handoffs, self.operations, self.settings)
         self.auth = StaffAuthService(self.settings, self.operations)
@@ -90,6 +111,8 @@ class ApplicationRuntime:
                     deleted = await self.prune_expired_threads()
                     if self.operations is not None:
                         await self.operations.prune_resolved(self.settings.checkpoint_retention_days)
+                    if self.attempt_limiter is not None:
+                        await asyncio.to_thread(self.attempt_limiter.prune)
                     LOGGER.info("retention_completed", extra={"deleted_threads": len(deleted)})
             except asyncio.CancelledError:
                 raise
