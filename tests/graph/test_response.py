@@ -1,4 +1,4 @@
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
 from customer_service.graph.response import final_reply
 from customer_service.nodes.promo_prefilter.node import build_node as build_prefilter
@@ -33,9 +33,14 @@ def test_promo_prefilter_extracts_provider_content_block_text() -> None:
             messages=[
                 HumanMessage(content="How long is shipping?"),
                 AIMessage(
+                    content="",
+                    tool_calls=[{"name": "faq_lookup", "args": {"query": "shipping"}, "id": "faq"}],
+                ),
+                ToolMessage(content='{"found": true, "faq_id": "shipping-times"}', tool_call_id="faq"),
+                AIMessage(
                     id="provider-message",
                     content=[{"type": "text", "text": "Shipping takes 3 to 5 business days.", "extras": {}}],
-                )
+                ),
             ]
         )
     )

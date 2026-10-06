@@ -8,7 +8,7 @@ from customer_service.config.settings import Settings
 from customer_service.graph.build import build_graph
 from customer_service.infrastructure.orders import default_order_repository
 from customer_service.nodes.promo_judge.node import PromoDecision
-from tests.conftest import ScriptedChatModel, ScriptedPromoJudge, declining_promo_judge
+from tests.conftest import ScriptedChatModel, ScriptedPromoJudge, StaticFaqRepository, declining_promo_judge
 
 
 def test_message_endpoint_returns_agent_reply_and_keeps_thread_history() -> None:
@@ -62,11 +62,18 @@ def test_message_endpoint_returns_a_catalog_promotion_when_the_judge_approves() 
         settings=Settings(),
         repository=default_order_repository(),
         model=ScriptedChatModel(
-            responses=[AIMessage(content="Most orders arrive within 3 to 5 business days.")]
+            responses=[
+                AIMessage(
+                    content="",
+                    tool_calls=[{"name": "faq_lookup", "args": {"query": "shipping"}, "id": "faq"}],
+                ),
+                AIMessage(content="Most orders arrive within 3 to 5 business days."),
+            ]
         ),
         promo_judge=ScriptedPromoJudge(
             [PromoDecision(include_promo=True, selected_promo_id="DEMO-SHIP-10")]
         ),
+        faq_repository=StaticFaqRepository(),
     )
     client = TestClient(create_app(lambda: graph))
 

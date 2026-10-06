@@ -4,7 +4,7 @@ import asyncio
 
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage
-
+from datetime import UTC, datetime
 from customer_service.config.settings import Settings
 from customer_service.graph.build import build_graph
 from customer_service.graph.response import final_reply
@@ -79,7 +79,8 @@ def test_handoff_summary_masks_contact_and_does_not_store_raw_name() -> None:
                 )
             ],
             "customer": {"name": "Alice Morgan", "email": "alice@example.com", "order_id": "ORD-1001"},
-            "verified": True,
+            "verified_email": "alice@example.com",
+            "verified_at": datetime.now(UTC)
         },
         config={"configurable": {"thread_id": "minimized-handoff"}},
     )
