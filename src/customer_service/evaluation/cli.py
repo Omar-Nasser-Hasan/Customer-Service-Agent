@@ -17,8 +17,13 @@ from customer_service.llm.factory import create_chat_model
 
 async def _run() -> int:
     base_url = os.environ.get("EVALUATION_BASE_URL", "http://127.0.0.1:8000")
+    settings = get_settings()
+    # The conversations endpoint requires BOT_API_KEY whenever one is configured.
+    headers = {}
+    if settings.bot_api_key is not None and settings.bot_api_key.get_secret_value():
+        headers["X-API-Key"] = settings.bot_api_key.get_secret_value()
 
-    async with httpx.AsyncClient(base_url=base_url, timeout=30) as client:
+    async with httpx.AsyncClient(base_url=base_url, timeout=30, headers=headers) as client:
         run_namespace = uuid4().hex[:12]
 
         async def send(thread_id: str, message: str) -> dict[str, object]:
@@ -29,7 +34,6 @@ async def _run() -> int:
             response.raise_for_status()
             return response.json()
 
-        settings = get_settings()
         report, candidates = await run_contracts(send, tier=settings.gemini_api_tier.value)
         report = await score_completed_answers(
             report,

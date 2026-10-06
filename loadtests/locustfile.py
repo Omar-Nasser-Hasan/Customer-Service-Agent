@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from itertools import count
 
 from locust import HttpUser, between, task
@@ -14,6 +15,9 @@ class SupportFlowUser(HttpUser):
 
     def on_start(self) -> None:
         self.sequence = next(_SEQUENCE)
+        # Needed only when the API under test has BOT_API_KEY configured.
+        if api_key := os.environ.get("BOT_API_KEY"):
+            self.client.headers["X-API-Key"] = api_key
 
     @task(4)
     def public_support(self) -> None:
