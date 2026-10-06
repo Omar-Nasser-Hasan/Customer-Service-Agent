@@ -1,133 +1,105 @@
-"""Deterministic identity gate for account-specific tools."""
+"""Deterministic identity check for an order ID + email claim, run before the assistant."""
 
 from __future__ import annotations
 
-import re
-from dataclasses import dataclass
+import logging
 from typing import Callable
 
-from langchain_core.messages import AIMessage, AnyMessage, HumanMessage, ToolMessage
+from langchain_core.messages import AIMessage
 
 from customer_service.infrastructure.orders import OrderRepository
-from customer_service.state.models import AgentState, CustomerContext
-
-
-ACCOUNT_SPECIFIC_TOOLS = frozenset({"order_status", "returns", "billing"})
-_ORDER_ID_PATTERN = re.compile(r"\bORD-\d+\b", re.IGNORECASE)
-_EMAIL_PATTERN = re.compile(r"\b[\w.+-]+@[\w-]+(?:\.[\w-]+)+\b")
-_ACCOUNT_INTENT_WORDS = frozenset(
-    {"order", "status", "track", "tracking", "return", "refund", "billing", "bill", "charge"}
+from customer_service.state.models import AgentState, EscalationReason
+from customer_service.verification.attempts import (
+    AttemptLimiter,
+    InMemoryAttemptLimiter,
+    recent_failures,
 )
+from customer_service.verification.claims import find_claim, latest_customer_text
+from customer_service.verification.grant import VerificationPolicy
+from customer_service.verification.messages import detect_language, message
+
+LOGGER = logging.getLogger(__name__)
 
 
-@dataclass(frozen=True)
-class IdentityClaim:
-    order_id: str | None
-    email: str | None
+def has_unused_claim(state: AgentState) -> bool:
+    """Route here only when the customer just supplied a complete, unused pair."""
 
-    @property
-    def complete(self) -> bool:
-        return bool(self.order_id and self.email)
+    return find_claim(state.messages, state.last_claim_message_id) is not None
 
 
-def _text(message: AnyMessage) -> str:
-    return message.content if isinstance(message.content, str) else str(message.content)
+def build_node(
+    repository: OrderRepository,
+    *,
+    policy: VerificationPolicy | None = None,
+    limiter: AttemptLimiter | None = None,
+    max_failures: int = 3,
+) -> Callable[[AgentState], dict[str, object]]:
+    grant = policy or VerificationPolicy()
+    attempts = limiter or InMemoryAttemptLimiter()
 
-
-def extract_identity_claim(state: AgentState) -> IdentityClaim:
-    """Collect the most recently supplied order ID and email from customer messages."""
-
-    order_id = state.customer.order_id
-    email = state.customer.email
-    for message in state.messages:
-        if not isinstance(message, HumanMessage):
-            continue
-        text = _text(message)
-        if matches := _ORDER_ID_PATTERN.findall(text):
-            order_id = matches[-1].upper()
-        if matches := _EMAIL_PATTERN.findall(text):
-            email = matches[-1].casefold()
-    return IdentityClaim(order_id=order_id, email=email)
-
-
-def pending_account_tool_calls(state: AgentState) -> list[dict[str, object]]:
-    """Return unexecuted account-tool calls from the latest AI message, if any."""
-
-    for message in reversed(state.messages):
-        if isinstance(message, AIMessage):
-            return [
-                call
-                for call in message.tool_calls
-                if call["name"] in ACCOUNT_SPECIFIC_TOOLS
-            ]
-    return []
-
-
-def _recent_account_intent(state: AgentState) -> bool:
-    human_text = " ".join(_text(message).casefold() for message in state.messages if isinstance(message, HumanMessage))
-    tokens = set(re.findall(r"[a-z]+", human_text))
-    return bool(tokens.intersection(_ACCOUNT_INTENT_WORDS))
-
-
-def requires_identity_verification(state: AgentState) -> bool:
-    """Route only unverified account work through this node."""
-
-    if state.verified:
-        return False
-    if pending_account_tool_calls(state):
-        return True
-    return extract_identity_claim(state).complete and _recent_account_intent(state)
-
-
-def has_unverified_account_intent(state: AgentState) -> bool:
-    """Identify a verification prompt that must not be followed by a promotion."""
-
-    return not state.verified and _recent_account_intent(state)
-
-
-def build_node(repository: OrderRepository) -> Callable[[AgentState], dict[str, object]]:
     def verify_identity(state: AgentState) -> dict[str, object]:
-        claim = extract_identity_claim(state)
-        intercepted_calls = pending_account_tool_calls(state)
+        claim = find_claim(state.messages, state.last_claim_message_id)
+        if claim is None:
+            return {}
 
-        def resolve_intercepted(message: str) -> list[ToolMessage]:
-            return [
-                ToolMessage(content=message, tool_call_id=str(call["id"]))
-                for call in intercepted_calls
-            ]
+        now = grant.now()
+        failures = recent_failures(state.failed_attempts, now)
+        # The claim is spent whatever happens, so it is never counted twice.
+        spent = {"last_claim_message_id": claim.message_id}
 
-        if not claim.complete:
+        try:
+            blocked = len(failures) >= max_failures or attempts.is_blocked(
+                email=claim.email, order_id=claim.order_id
+            )
+            order = None if blocked else repository.verify_identity(claim.order_id, claim.email)
+            if not blocked and order is None:
+                attempts.record_failure(email=claim.email, order_id=claim.order_id)
+        except Exception as error:
+            # Infrastructure trouble is not the customer's failed attempt.
+            LOGGER.warning("verification_error", extra={"error_type": type(error).__name__})
+            return {"escalation_reason": EscalationReason.TOOL_FAILURE}
+
+        if blocked:
+            LOGGER.info("verification_blocked", extra={"outcome": "blocked"})
             return {
-                "verified": False,
-                "messages": [
-                    *resolve_intercepted("Account lookup was not executed: identity verification is required."),
-                    AIMessage(
-                        content="To protect your account, please send both your order ID and the email used for the order."
-                    ),
-                ],
+                **spent,
+                "failed_attempts": failures,
+                "escalation_reason": EscalationReason.VERIFICATION_FAILED,
             }
 
-        order = repository.verify_identity(claim.order_id, claim.email)
-        customer = CustomerContext(order_id=claim.order_id, email=claim.email)
-        if order is None:
+        if order is not None:
+            LOGGER.info("verification_succeeded", extra={"outcome": "verified"})
+            # A new full pair replaces any earlier identity, one at a time.
+            customer = state.customer.model_copy(
+                update={
+                    "email": claim.email,
+                    "order_id": claim.order_id,
+                    "name": order.customer_name,
+                }
+            )
             return {
+                **spent,
                 "customer": customer,
-                "verified": False,
-                "messages": [
-                    *resolve_intercepted("Account lookup was not executed: identity verification failed."),
-                    AIMessage(
-                        content="I couldn't verify that order ID and email combination. Please check both and try again."
-                    ),
-                ],
+                "verified_email": claim.email,
+                "verified_at": now,
             }
 
-        customer.name = order.customer_name
+        failures = [*failures, now]
+        LOGGER.info(
+            "verification_failed", extra={"outcome": "failed", "thread_failures": len(failures)}
+        )
+        if len(failures) >= max_failures:
+            return {
+                **spent,
+                "failed_attempts": failures,
+                "escalation_reason": EscalationReason.VERIFICATION_FAILED,
+            }
+        language = detect_language(latest_customer_text(state.messages))
+        # An existing verification is left alone: a typo must not log anyone out.
         return {
-            "customer": customer,
-            "verified": True,
-            "messages": resolve_intercepted(
-                "Identity verified for this conversation. Call the requested account tool again."
-            ),
+            **spent,
+            "failed_attempts": failures,
+            "messages": [AIMessage(content=message("claim_failed", language))],
         }
 
     return verify_identity
