@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+
 from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph import END, START, StateGraph
-from langgraph.prebuilt import ToolNode, tools_condition
+from langgraph.prebuilt import ToolNode
 
 from customer_service.caching.policy import decide_cache_policy, record_cache_decision
 from customer_service.config.settings import Settings
@@ -31,16 +34,22 @@ from customer_service.nodes.safety_check.gemini import (
 from customer_service.nodes.safety_check.jev import JevJudge
 from customer_service.nodes.safety_check.node import Classifier, build_node as build_safety_check_node
 from customer_service.nodes.tool_dispatch.node import build_node as build_tool_dispatch_node
+from customer_service.nodes.verify_identity.gate import (
+    ACCOUNT_SPECIFIC_TOOLS,
+    build_node as build_account_gate_node,
+    pending_tool_calls,
+)
 from customer_service.nodes.verify_identity.node import (
     build_node as build_verify_identity_node,
-    has_unverified_account_intent,
-    requires_identity_verification,
+    has_unused_claim,
 )
 from customer_service.state.models import AgentState
 from customer_service.tools.billing import create_billing_tool
 from customer_service.tools.faq_lookup import create_faq_lookup_tool
 from customer_service.tools.order_status import create_order_status_tool
 from customer_service.tools.returns import create_returns_tool
+from customer_service.verification.attempts import AttemptLimiter, InMemoryAttemptLimiter
+from customer_service.verification.grant import VerificationPolicy
 
 
 def build_graph(
@@ -54,12 +63,22 @@ def build_graph(
     safety_judge: SafetyJudge | None = None,
     jev_judge: Classifier | None = None,
     checkpointer: BaseCheckpointSaver | None = None,
+    attempt_limiter: AttemptLimiter | None = None,
+    verification_policy: VerificationPolicy | None = None,
 ):
-    """Build the Iteration 4 safety, support, promotion, and handoff graph."""
+    """Build the safety, verification, support, promotion, and handoff graph."""
 
-    order_status = create_order_status_tool(repository)
-    returns = create_returns_tool(repository)
-    billing = create_billing_tool(repository)
+    # One policy (TTL + clock) and one limiter are shared by every component, so
+    # the claim node, the gate, the tools, and the prompts always agree.
+    policy = verification_policy or VerificationPolicy(
+        ttl=timedelta(seconds=settings.verification_ttl_seconds)
+    )
+    limiter = attempt_limiter or InMemoryAttemptLimiter(limit=settings.verification_key_failure_limit)
+    max_failures = settings.verification_max_thread_failures
+
+    order_status = create_order_status_tool(repository, policy=policy)
+    returns = create_returns_tool(repository, policy=policy)
+    billing = create_billing_tool(repository, policy=policy)
     faq_lookup = create_faq_lookup_tool(faq_repository or UnavailableFaqRepository())
     tools = [order_status, returns, billing, faq_lookup]
     record_cache_decision(
@@ -103,22 +122,33 @@ def build_graph(
             return END
         if state.safety_action == "escalate":
             return "handoff_summary"
-        return "assistant"
+        # Verification runs early, but only when the customer just supplied a
+        # complete, unused order ID + email pair. FAQ-only chat never gets here.
+        return "verify_identity" if has_unused_claim(state) else "assistant"
+
+    def route_after_verification(state: AgentState) -> str:
+        if state.escalation_reason is not None:
+            return "handoff_summary"
+        # Success appends nothing, so the customer's message is still last. A
+        # failed check appends its fixed reply, which ends the turn.
+        return "assistant" if isinstance(state.messages[-1], HumanMessage) else END
 
     def route_after_assistant(state: AgentState) -> str:
         if state.escalation_reason is not None:
             return "handoff_summary"
-        if requires_identity_verification(state):
-            return "verify_identity"
-        tool_route = tools_condition(state)
-        if tool_route == "tools":
-            return "tools"
-        if has_unverified_account_intent(state):
-            return END
-        return "promo_prefilter"
+        calls = pending_tool_calls(state)
+        if not calls:
+            return "promo_prefilter"
+        # Every account tool call is authorized in code before it can run.
+        if any(call["name"] in ACCOUNT_SPECIFIC_TOOLS for call in calls):
+            return "account_gate"
+        return "tools"
 
-    def route_after_verification(state: AgentState) -> str:
-        return "assistant" if state.verified else END
+    def route_after_gate(state: AgentState) -> str:
+        if state.escalation_reason is not None:
+            return "handoff_summary"
+        # Allowed calls are still pending; a denial appended a reply instead.
+        return "tools" if pending_tool_calls(state) else END
 
     def route_after_tools(state: AgentState) -> str:
         return "handoff_summary" if state.escalation_reason is not None else "assistant"
@@ -130,35 +160,41 @@ def build_graph(
     graph.add_node("safety_check", build_safety_check_node(settings=settings, judge=safety, jev=jev))
     graph.add_node(
         "assistant",
-        build_assistant_node(settings=settings, model=assistant_model, tools=tools),
+        build_assistant_node(settings=settings, model=assistant_model, tools=tools, policy=policy),
     )
-    graph.add_node("verify_identity", build_verify_identity_node(repository))
+    graph.add_node(
+        "verify_identity",
+        build_verify_identity_node(
+            repository, policy=policy, limiter=limiter, max_failures=max_failures
+        ),
+    )
+    graph.add_node(
+        "account_gate",
+        build_account_gate_node(
+            repository, policy=policy, limiter=limiter, max_failures=max_failures
+        ),
+    )
     graph.add_node("tools", build_tool_dispatch_node(raw_tool_node))
     graph.add_node(
         "promo_prefilter",
         build_promo_prefilter_node(
             promotion_repository=promotion_repository,
             order_repository=repository,
+            policy=policy,
         ),
     )
     graph.add_node("promo_judge", build_promo_judge_node(settings=settings, judge=judge))
     graph.add_node("format_response", build_format_response_node())
-    graph.add_node("handoff_summary", build_handoff_summary_node())
+    graph.add_node("handoff_summary", build_handoff_summary_node(policy=policy))
     graph.add_node("human_handoff", build_human_handoff_node())
 
     graph.add_edge(START, "safety_check")
     graph.add_conditional_edges(
         "safety_check",
         route_after_safety,
-        {"assistant": "assistant", "handoff_summary": "handoff_summary", END: END},
-    )
-    graph.add_conditional_edges(
-        "assistant",
-        route_after_assistant,
         {
             "verify_identity": "verify_identity",
-            "tools": "tools",
-            "promo_prefilter": "promo_prefilter",
+            "assistant": "assistant",
             "handoff_summary": "handoff_summary",
             END: END,
         },
@@ -166,7 +202,22 @@ def build_graph(
     graph.add_conditional_edges(
         "verify_identity",
         route_after_verification,
-        {"assistant": "assistant", END: END},
+        {"assistant": "assistant", "handoff_summary": "handoff_summary", END: END},
+    )
+    graph.add_conditional_edges(
+        "assistant",
+        route_after_assistant,
+        {
+            "account_gate": "account_gate",
+            "tools": "tools",
+            "promo_prefilter": "promo_prefilter",
+            "handoff_summary": "handoff_summary",
+        },
+    )
+    graph.add_conditional_edges(
+        "account_gate",
+        route_after_gate,
+        {"tools": "tools", "handoff_summary": "handoff_summary", END: END},
     )
     graph.add_conditional_edges(
         "tools",
