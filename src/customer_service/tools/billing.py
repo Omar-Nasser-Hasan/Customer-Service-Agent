@@ -1,22 +1,32 @@
-"""Verified-order billing lookup tool."""
-
-from __future__ import annotations
+"""Verified-order billing lookup tool, scoped to the verified customer's own orders."""
 
 import json
 
 from langchain_core.tools import BaseTool, tool
 
 from customer_service.infrastructure.orders import OrderRepository
+from customer_service.tools.injected import VerifiedAt, VerifiedEmail
+from customer_service.verification.claims import normalize_order_id
+from customer_service.verification.grant import VerificationPolicy
 
 
-def create_billing_tool(repository: OrderRepository) -> BaseTool:
+def create_billing_tool(
+    repository: OrderRepository, *, policy: VerificationPolicy | None = None
+) -> BaseTool:
+    grant = policy or VerificationPolicy()
+
     @tool("billing")
-    def billing(order_id: str) -> str:
+    def billing(
+        order_id: str,
+        verified_email: VerifiedEmail = None,
+        verified_at: VerifiedAt = None,
+    ) -> str:
         """Explain the recorded charge for a verified order."""
 
-        order = repository.find(order_id)
+        normalized_id = normalize_order_id(order_id) or order_id.strip().upper()
+        order = grant.owned_order(repository, normalized_id, verified_email, verified_at)
         if order is None:
-            return json.dumps({"found": False, "order_id": order_id.upper()})
+            return json.dumps({"found": False, "order_id": normalized_id})
         return json.dumps(
             {
                 "found": True,
