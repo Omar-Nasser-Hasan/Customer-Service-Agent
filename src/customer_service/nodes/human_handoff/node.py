@@ -28,6 +28,8 @@ def build_node() -> Callable[[AgentState], dict[str, object]]:
             "escalation_reason": None,
             "case_status": "resolved",
             "resolved_at": datetime.now(UTC),
+            # A human has dealt with the customer, so failed identity checks start over.
+            "failed_attempts": [],
         }
 
     return human_handoff
