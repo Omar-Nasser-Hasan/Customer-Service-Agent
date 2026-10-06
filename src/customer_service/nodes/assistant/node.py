@@ -12,23 +12,28 @@ from langchain_core.tools import BaseTool
 from customer_service.config.settings import Settings
 from customer_service.nodes.assistant.prompt import build_system_prompt
 from customer_service.state.models import AgentState, EscalationReason
+from customer_service.verification.grant import VerificationPolicy
 
 
 def build_node(
-    *, settings: Settings, model: BaseChatModel, tools: list[BaseTool]
+    *,
+    settings: Settings,
+    model: BaseChatModel,
+    tools: list[BaseTool],
+    policy: VerificationPolicy | None = None,
 ) -> Callable[[AgentState], dict[str, object]]:
     model_with_tools = model.bind_tools(tools)
     prompt = SystemMessage(content=build_system_prompt(settings))
+    grant = policy or VerificationPolicy()
 
     def assistant(state: AgentState) -> dict[str, object]:
+        # An expired verification counts as not verified. The email is never
+        # put in front of the model; ownership is enforced in code, not here.
+        verified = grant.is_valid(state.verified_email, state.verified_at)
         verification_context = SystemMessage(
             content=(
                 f"Internal context. Today's date: {datetime.now(UTC).date().isoformat()}. "
-                + (
-                    f"This conversation is verified for order {state.customer.order_id} only."
-                    if state.verified
-                    else "This conversation is not verified."
-                )
+                + ("This conversation is verified." if verified else "This conversation is not verified.")
             )
         )
         try:
