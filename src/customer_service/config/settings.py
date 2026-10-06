@@ -92,6 +92,15 @@ class Settings(BaseSettings):
     worker_max_attempts: int = Field(default=8, ge=1, le=50)
     whatsapp_service_window_hours: int = Field(default=24, ge=1, le=72)
 
+        # Identity verification. The API key protects the public conversations
+    # endpoint (required when APP_ENVIRONMENT=production); the hash key is used
+    # for the cross-thread failure table (required in production as well).
+    bot_api_key: SecretStr | None = None
+    verification_hash_key: SecretStr | None = None
+    verification_ttl_seconds: int = Field(default=7_200, ge=60)
+    verification_max_thread_failures: int = Field(default=3, ge=1, le=20)
+    verification_key_failure_limit: int = Field(default=5, ge=1, le=100)
+
     postgres_dsn: SecretStr | None = None
     langgraph_strict_msgpack: bool = True
     checkpoint_retention_days: int = Field(default=90, ge=1)
