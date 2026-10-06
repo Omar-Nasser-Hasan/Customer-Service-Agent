@@ -35,6 +35,7 @@ class EscalationReason(StrEnum):
     SAFETY_UNCERTAIN = "safety_uncertain"
     TOOL_FAILURE = "tool_failure"
     MODEL_FAILURE = "model_failure"
+    VERIFICATION_FAILED = "verification_failed"
 
 
 class HandoffSummary(BaseModel):
@@ -50,8 +51,17 @@ class HandoffSummary(BaseModel):
 
 class AgentState(BaseModel):
     messages: Annotated[list[AnyMessage], add_messages] = Field(default_factory=list)
+    # Only the last order the customer looked up, and only for a verified email.
     customer: CustomerContext = Field(default_factory=CustomerContext)
-    verified: bool = False
+    # Verification is an identity (the email that proved ownership of an order),
+    # not an order. Whether it still counts is decided by VerificationPolicy.
+    verified_email: str | None = None
+    verified_at: datetime | None = None
+    # Timestamps of failed checks; only the last 24 hours count. Cleared when a
+    # human resolves a handoff, never by a successful verification.
+    failed_attempts: list[datetime] = Field(default_factory=list)
+    # Customer message already consumed as a claim, so a pair is never counted twice.
+    last_claim_message_id: str | None = None
     promo_matches: list[PromoMatch] = Field(default_factory=list)
     already_promoted: bool = False
     draft_response: str | None = None
