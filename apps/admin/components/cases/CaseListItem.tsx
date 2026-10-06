@@ -1,1 +1,11 @@
-import Link from "next/link"; export function CaseListItem({item}:{item:any}){return <Link className="case" href={`/cases/${item.case_id}`}><b>{item.assigned_to_email ?? "Unassigned"}</b><div>{item.handoff_summary?.latest_customer_request?.slice(0,90) ?? "Escalated case"}</div><small>{item.status} · v{item.version}</small></Link>}
+import Link from "next/link";
+
+export function CaseListItem({ item, selected = false }: { item: any; selected?: boolean }) {
+  const request = item.handoff_summary?.latest_customer_request ?? "Escalated customer request";
+  const status = item.status === "claimed" ? "Claimed" : item.status === "resolved" ? "Resolved" : "Unassigned";
+  const time = new Intl.DateTimeFormat("en", { hour: "numeric", minute: "2-digit" }).format(new Date(item.updated_at));
+  return <Link className={`case ${selected ? "selected" : ""}`} href={`/cases/${item.case_id}`}>
+    <div className="case-row"><span className="case-name">{item.handoff_summary?.customer_name ?? "Customer case"}</span><span className="case-time">{time}</span></div>
+    <div className="case-preview">{request}</div><div className="case-meta"><span className={`status-pill ${item.status}`}>{status}</span><span>v{item.version}</span></div>
+  </Link>;
+}
