@@ -37,20 +37,22 @@ integration, admin routes/UI, authentication, and production promotions.
 
 ## Iteration 6 — bilingual semantic FAQ retrieval
 
-`faq_lookup` keeps its public tool contract but now retrieves from a mixed
-English/Arabic pgvector corpus. The implementation embeds title plus answer
-with Voyage `voyage-3.5-lite` (1024 dimensions), uses cosine similarity and a
-HNSW index, and returns only the highest result above the explicitly calibrated
-`FAQ_MIN_SIMILARITY` threshold. Scores and alternate candidates never enter the
-assistant context. A below-threshold query returns the established safe
-no-match payload; Voyage, database, or index errors remain tool failures and
-therefore use the existing fail-closed handoff route.
+`faq_lookup` retrieves from 22 approved English/Arabic answer entries plus
+synthetic, draft question variants and a reserved `__no_answer__` sink. Voyage
+`voyage-3.5-lite` (1024 dimensions) embeds normalized queries and variants;
+variants are grouped by FAQ, then the calibrated score floor and runner-up
+margin (`FAQ_MIN_SIMILARITY` and `FAQ_MIN_MARGIN`) are applied. The public tool
+accepts `language=en|ar`; Arabic selects the stored answer, while the assistant
+handles Egyptian/MSA register conversion. Scores and alternate candidates never
+enter the assistant context. A sink win, below-floor result, or insufficient
+margin returns the established safe no-match payload; Voyage, database, or index
+errors remain tool failures and therefore use the existing fail-closed handoff
+route.
 
-The six short documents are deliberately one document per FAQ/language pair;
-the schema stores source hashes and metadata so longer reviewed FAQ content can
-be chunked later without a table redesign. Arabic translations are committed
-development source content and require business-language review before a real
-customer launch.
+The corpus, variants, and sink are synthetic development content and require
+business-language/native review before a real customer launch. Deterministic
+verification and handoff messages remain MSA and are intentionally not
+dialect-matched.
 
 For local development, set `VOYAGE_API_KEY`, start Postgres, and explicitly
 index before running the service:
@@ -60,13 +62,27 @@ python -m customer_service.retrieval.index_faqs --calibrate
 ```
 
 The command creates pgvector schema/indexes, synchronizes added and changed
-documents, removes stale rows, and prints a threshold only if all intended
-fixture matches score above every negative fixture. Put the printed value in
-`FAQ_MIN_SIMILARITY`; the application never guesses or silently retunes it.
+documents and variants, removes stale rows, and prints the calibrated score
+floor and margin. Put the printed values in `FAQ_MIN_SIMILARITY` and
+`FAQ_MIN_MARGIN`; the application never guesses or silently retunes them.
 `FAQ_SYNC_ON_STARTUP=true` is a local convenience (shown in `.env.example`) and
 fails clearly when Voyage configuration is invalid. Explicit indexing remains
 the production workflow, where migrations and corpus releases are owned by the
 deployment process rather than application startup.
+
+The final corrected-label control also measured a score-free top-three context
+variant: A4 contained the labeled FAQ in 259/262 held-out cases (98.9%,
+bootstrap 95% CI 97.3–100%). This is diagnostic candidate coverage only; the
+shipping tool still applies the fixed A4 accept rule and returns one answer.
+
+FAQ query telemetry is optional and always passes through `redact_text`; it is
+enabled by default for development/CI and disabled by default in production.
+Voyage failures are retried a bounded number of times and then fail closed to
+the existing human-handoff path. For the Voyage free tier only, development
+can set `FAQ_EMBEDDING_MIN_INTERVAL_SECONDS=21` to space requests under the
+three-requests-per-minute limit. This throttle is disabled by default and must
+remain `0` in production. Embedding requests are also batched below roughly
+3,000 estimated tokens.
 
 ## Iteration 5 hardening
 
