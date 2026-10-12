@@ -8,7 +8,7 @@ from typing import AsyncIterator
 from psycopg_pool import AsyncConnectionPool
 
 from customer_service.config.settings import Settings
-from customer_service.retrieval.corpus import load_corpus
+from customer_service.retrieval.corpus import load_corpus, load_sink, load_variants
 from customer_service.retrieval.embeddings import VoyageEmbeddingProvider
 from customer_service.retrieval.repository import PostgresFaqRepository
 
@@ -21,7 +21,8 @@ async def faq_repository_runtime(settings: Settings) -> AsyncIterator[PostgresFa
         repository = PostgresFaqRepository(pool=pool, embeddings=VoyageEmbeddingProvider(settings), settings=settings)
         await repository.setup()
         if settings.faq_sync_on_startup:
-            await repository.sync(load_corpus())
+            await repository.sync(load_corpus(store_name=settings.store_name))
+            await repository.sync_variants([*load_variants(), *load_sink()])
         yield repository
     finally:
         await pool.close()
