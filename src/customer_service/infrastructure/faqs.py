@@ -18,11 +18,11 @@ class FaqEntry(BaseModel):
 class FaqRepository(Protocol):
     """The public FAQ tool depends on this boundary, not a retrieval engine."""
 
-    async def search(self, query: str) -> FaqEntry | None: ...
+    async def search(self, query: str, *, language: str = "en") -> FaqEntry | None: ...
 
 
 class UnavailableFaqRepository:
     """Default for isolated graphs that never invoke FAQ lookup."""
 
-    async def search(self, query: str) -> FaqEntry | None:
+    async def search(self, query: str, *, language: str = "en") -> FaqEntry | None:
         raise RuntimeError("FAQ retrieval has not been configured for this graph")
