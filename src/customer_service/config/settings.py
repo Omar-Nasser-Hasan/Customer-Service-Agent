@@ -107,8 +107,14 @@ class Settings(BaseSettings):
     voyage_api_key: SecretStr | None = None
     voyage_model: str = "voyage-3.5-lite"
     voyage_embedding_dimensions: int = Field(default=1024, ge=1, le=2048)
-    faq_corpus_version: str = "v1"
-    faq_min_similarity: float | None = Field(default=None, ge=-1, le=1)
+    faq_corpus_version: str = "v2"
+    # Calibrated on the corrected synthetic dev set; deployments may override explicitly.
+    faq_min_similarity: float | None = Field(default=0.50098, ge=-1, le=1)
+    faq_min_margin: float | None = Field(default=0.014584, ge=0, le=1)
+    faq_candidate_limit: int = Field(default=10, ge=1, le=50)
+    faq_log_queries: bool | None = None
+    faq_embedding_retries: int = Field(default=2, ge=0, le=5)
+    faq_embedding_retry_delay_seconds: float = Field(default=0.25, ge=0, le=10)
     faq_sync_on_startup: bool = False
     langsmith_api_key: SecretStr | None = None
     langsmith_tracing: bool = False
@@ -159,6 +165,12 @@ class Settings(BaseSettings):
     def jev_thresholds_must_leave_an_unsure_band(self) -> "Settings":
         if self.jev_clear_threshold >= self.jev_act_threshold:
             raise ValueError("JEV_CLEAR_THRESHOLD must be lower than JEV_ACT_THRESHOLD")
+        return self
+
+    @model_validator(mode="after")
+    def default_faq_query_logging_by_environment(self) -> "Settings":
+        if self.faq_log_queries is None:
+            self.faq_log_queries = self.app_environment.lower() not in {"production", "prod"}
         return self
 
     def model_for(self, node_name: str) -> NodeModelConfig:

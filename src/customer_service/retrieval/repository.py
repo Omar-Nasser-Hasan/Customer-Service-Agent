@@ -234,6 +234,22 @@ class PostgresFaqRepository:
     async def search(self, query: str) -> FaqEntry | None:
         if self._settings.faq_min_similarity is None:
             raise RuntimeError("FAQ_MIN_SIMILARITY must be calibrated before semantic FAQ retrieval is enabled")
+        # The variants table is authoritative once indexed. Legacy answer search remains
+        # available for rollback and for tests that intentionally sync only faq_documents.
+        async with self._pool.connection() as connection:
+            async with connection.cursor() as cursor:
+                await cursor.execute("SELECT EXISTS (SELECT 1 FROM faq_variants LIMIT 1)")
+                has_variants = bool((await cursor.fetchone())[0])
+        if has_variants:
+            ranked = await self._variant_ranked(query)
+            if not ranked:
+                return None
+            top_id, top_score = ranked[0]
+            if top_id == "__no_answer__" or top_score < self._settings.faq_min_similarity:
+                return None
+            if self._settings.faq_min_margin is not None and len(ranked) > 1 and top_score - ranked[1][1] < self._settings.faq_min_margin:
+                return None
+            return await self._entry(top_id, language)
         entry, score = await self._best(query)
         return entry if score is not None and score >= self._settings.faq_min_similarity else None
 
