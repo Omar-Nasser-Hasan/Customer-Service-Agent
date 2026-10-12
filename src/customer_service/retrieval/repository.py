@@ -311,3 +311,18 @@ class PostgresFaqRepository:
                     row = await cursor.fetchone()
                     results.append((None, None) if row is None else (FaqEntry(id=row["faq_id"], title=row["title"], answer=row["answer"]), float(row["similarity"])))
         return results
+
+    async def best_variant_similarities(self, queries: list[str], *, language: str = "en") -> list[tuple[FaqEntry | None, float | None]]:
+        """Calibration helper for the variant index; scores never leave indexing."""
+        results: list[tuple[FaqEntry | None, float | None]] = []
+        for query in queries:
+            ranked = await self._variant_ranked(query)
+            if not ranked:
+                results.append((None, None))
+                continue
+            faq_id, score = ranked[0]
+            if faq_id == "__no_answer__":
+                results.append((None, score))
+            else:
+                results.append((await self._entry(faq_id, language), score))
+        return results
