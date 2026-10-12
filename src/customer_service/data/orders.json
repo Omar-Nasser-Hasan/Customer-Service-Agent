@@ -10,8 +10,8 @@
     "customer_name": "Alice Morgan",
     "delivered_at": null,
     "payment_status": "paid",
-    "charged_amount": "89.99",
-    "currency": "USD",
+    "charged_amount": "899.99",
+    "currency": "EGP",
     "charge_description": "Souqly order ORD-1001"
   },
   {
@@ -25,8 +25,8 @@
     "customer_name": "Ben Carter",
     "delivered_at": null,
     "payment_status": "paid",
-    "charged_amount": "42.50",
-    "currency": "USD",
+    "charged_amount": "425.00",
+    "currency": "EGP",
     "charge_description": "Souqly order ORD-1002"
   },
   {
@@ -40,8 +40,8 @@
     "customer_name": "Carla Diaz",
     "delivered_at": "2026-09-16",
     "payment_status": "paid",
-    "charged_amount": "120.00",
-    "currency": "USD",
+    "charged_amount": "1200.00",
+    "currency": "EGP",
     "charge_description": "Souqly order ORD-1003"
   }
 ]

@@ -23,8 +23,8 @@ def test_billing_returns_only_charge_information() -> None:
         "found": True,
         "order_id": "ORD-1001",
         "payment_status": "paid",
-        "amount": "89.99",
-        "currency": "USD",
+        "amount": "899.99",
+        "currency": "EGP",
         "description": "Souqly order ORD-1001",
     }
 
@@ -88,7 +88,8 @@ def test_the_model_cannot_see_or_supply_the_injected_grant() -> None:
 
 async def test_faq_lookup_returns_matches_and_no_match_result() -> None:
     class Repository:
-        async def search(self, query: str) -> FaqEntry | None:
+        async def search(self, query: str, *, language: str = "en") -> FaqEntry | None:
+            assert language in {"en", "ar"}
             return FaqEntry(id="shipping-times", title="Shipping times", answer="Most orders arrive within 3 to 5 business days after dispatch.") if query == "How long does delivery take?" else None
 
     tool = create_faq_lookup_tool(Repository())

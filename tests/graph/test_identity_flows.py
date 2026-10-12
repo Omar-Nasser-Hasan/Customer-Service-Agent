@@ -147,7 +147,7 @@ async def test_verified_customer_cannot_read_someone_elses_order() -> None:
     assert "not executed" in tool_messages(state)[-1].content
     assert len(state["failed_attempts"]) == 1
     transcript = " ".join(str(item.content) for item in state["messages"])
-    assert "ben@example.com" not in transcript and "42.50" not in transcript
+    assert "ben@example.com" not in transcript and "425.00" not in transcript
 
 
 async def test_split_pair_across_two_messages_verifies() -> None:

@@ -193,7 +193,7 @@ async def test_verification_persists_across_turns_of_the_same_thread() -> None:
                     }
                 ],
             ),
-            AIMessage(content="The recorded charge was $89.99 USD."),
+            AIMessage(content="The recorded charge was 899.99 EGP."),
         ]
     )
     graph = build_graph(
@@ -216,7 +216,7 @@ async def test_verification_persists_across_turns_of_the_same_thread() -> None:
     assert first_state["verified_email"] == "alice@example.com"
     assert second_state["verified_email"] == "alice@example.com"
     assert any(
-        isinstance(message, ToolMessage) and '"amount": "89.99"' in str(message.content)
+        isinstance(message, ToolMessage) and '"amount": "899.99"' in str(message.content)
         for message in second_state["messages"]
     )
 
