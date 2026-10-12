@@ -10,12 +10,26 @@ from psycopg_pool import AsyncConnectionPool
 
 from customer_service.config.settings import Settings
 from customer_service.infrastructure.faqs import FaqEntry
-from customer_service.retrieval.corpus import FaqDocument
+from customer_service.retrieval.corpus import FaqDocument, FaqVariant
 from customer_service.retrieval.embeddings import EmbeddingProvider
+from customer_service.privacy.redaction import redact_text
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _vector(values: Sequence[float]) -> str:
     return "[" + ",".join(str(float(value)) for value in values) + "]"
+
+
+def normalize_query(text: str) -> str:
+    """Apply the measured light normalization used by the winning retrieval arm."""
+    text = unicodedata.normalize("NFKC", text).replace("\u0640", "")
+    text = "".join(
+        char for char in text
+        if not (0x0610 <= ord(char) <= 0x061A or 0x064B <= ord(char) <= 0x065F or ord(char) == 0x0670 or 0x06D6 <= ord(char) <= 0x06ED)
+    )
+    text = text.translate(str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789"))
+    return re.sub(r"\s+", " ", text).strip()
 
 
 @dataclass(frozen=True)
