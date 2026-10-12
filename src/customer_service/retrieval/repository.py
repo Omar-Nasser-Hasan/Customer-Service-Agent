@@ -231,7 +231,45 @@ class PostgresFaqRepository:
             return None, None
         return FaqEntry(id=row["faq_id"], title=row["title"], answer=row["answer"]), float(row["similarity"])
 
-    async def search(self, query: str) -> FaqEntry | None:
+    async def _variant_ranked(self, query: str) -> list[tuple[str, float]]:
+        vector = (await self._embeddings.embed([normalize_query(query)], input_type="query"))[0]
+        if len(vector) != self._settings.voyage_embedding_dimensions:
+            raise RuntimeError("Embedding provider returned an unexpected query vector")
+        async with self._pool.connection() as connection:
+            async with connection.cursor(row_factory=dict_row) as cursor:
+                await cursor.execute("""
+                    SELECT faq_id, MAX(1 - (embedding <=> %s::vector)) AS similarity
+                    FROM faq_variants
+                    GROUP BY faq_id
+                    ORDER BY similarity DESC
+                    LIMIT %s
+                """, (_vector(vector), self._settings.faq_candidate_limit))
+                rows = await cursor.fetchall()
+        return [(row["faq_id"], float(row["similarity"])) for row in rows]
+
+    async def _entry(self, faq_id: str, language: str) -> FaqEntry | None:
+        async with self._pool.connection() as connection:
+            async with connection.cursor(row_factory=dict_row) as cursor:
+                await cursor.execute(
+                    "SELECT faq_id, title, answer FROM faq_documents WHERE faq_id=%s AND language=%s",
+                    (faq_id, language),
+                )
+                row = await cursor.fetchone()
+        return None if row is None else FaqEntry(id=row["faq_id"], title=row["title"], answer=row["answer"])
+
+    async def search_candidates(self, query: str, *, language: str = "en", limit: int = 3) -> list[FaqEntry]:
+        """Return top real FAQ candidates without scores for the Gate C control."""
+        ranked = [item for item in await self._variant_ranked(query) if item[0] != "__no_answer__"][:limit]
+        entries = []
+        for faq_id, _ in ranked:
+            entry = await self._entry(faq_id, language)
+            if entry is not None:
+                entries.append(entry)
+        return entries
+
+    async def search(self, query: str, *, language: str = "en") -> FaqEntry | None:
+        if self._settings.faq_log_queries:
+            LOGGER.info("faq_query query=%s language=%s", redact_text(query), language)
         if self._settings.faq_min_similarity is None:
             raise RuntimeError("FAQ_MIN_SIMILARITY must be calibrated before semantic FAQ retrieval is enabled")
         # The variants table is authoritative once indexed. Legacy answer search remains

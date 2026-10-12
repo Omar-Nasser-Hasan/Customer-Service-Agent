@@ -14,18 +14,21 @@ class CalibrationResult:
     threshold: float
     lowest_positive: float
     highest_negative: float
+    margin: float | None = None
 
 
 async def calibrate(
     repository: PostgresFaqRepository,
     path: Path | None = None,
     fixtures: dict[str, list[dict[str, str]]] | None = None,
+    margin: float | None = None,
 ) -> CalibrationResult:
     if fixtures is None:
         source = path or Path(__file__).parents[1] / "data" / "faq_calibration.json"
         fixtures = json.loads(source.read_text(encoding="utf-8"))
     cases = [*fixtures["positive"], *fixtures["negative"]]
-    ranked = await repository.best_similarities([case["query"] for case in cases])
+    scorer = getattr(repository, "best_variant_similarities", repository.best_similarities)
+    ranked = await scorer([case["query"] for case in cases])
     positives: list[float] = []
     negatives: list[float] = []
     for case, (entry, score) in zip(fixtures["positive"], ranked[: len(fixtures["positive"])], strict=True):
@@ -37,4 +40,4 @@ async def calibrate(
     low, high = min(positives), max(negatives)
     if low <= high:
         raise RuntimeError("Calibration failed: intended and no-match similarities overlap; review corpus or fixtures")
-    return CalibrationResult(threshold=round((low + high) / 2, 6), lowest_positive=low, highest_negative=high)
+    return CalibrationResult(threshold=round((low + high) / 2, 6), lowest_positive=low, highest_negative=high, margin=margin)
