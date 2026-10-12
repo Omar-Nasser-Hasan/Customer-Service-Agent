@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import logging
+import re
+import unicodedata
 from typing import Sequence
 
 from psycopg.rows import dict_row
@@ -81,9 +84,43 @@ class PostgresFaqRepository:
                     CREATE INDEX IF NOT EXISTS faq_documents_embedding_hnsw
                     ON faq_documents USING hnsw (embedding vector_cosine_ops)
                 """)
+                await cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS faq_entries (
+                        faq_id TEXT NOT NULL, language TEXT NOT NULL, title TEXT NOT NULL,
+                        answer TEXT NOT NULL, content_hash TEXT NOT NULL, corpus_version TEXT NOT NULL,
+                        PRIMARY KEY (faq_id, language)
+                    )
+                """)
+                await cursor.execute(f"""
+                    CREATE TABLE IF NOT EXISTS faq_variants (
+                        variant_key TEXT PRIMARY KEY, faq_id TEXT NOT NULL, text TEXT NOT NULL,
+                        dialect TEXT NOT NULL, review_status TEXT NOT NULL, synthetic BOOLEAN NOT NULL,
+                        content_hash TEXT NOT NULL, corpus_version TEXT NOT NULL,
+                        embedding_model TEXT NOT NULL, embedding_dimensions INTEGER NOT NULL,
+                        embedding vector({dimensions}) NOT NULL,
+                        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                    )
+                """)
+                await cursor.execute("""
+                    SELECT pg_catalog.format_type(attribute.atttypid, attribute.atttypmod) AS type_name
+                    FROM pg_attribute AS attribute
+                    JOIN pg_class AS relation ON relation.oid = attribute.attrelid
+                    WHERE relation.relname = 'faq_variants' AND attribute.attname = 'embedding'
+                """)
+                variant_row = await cursor.fetchone()
+                if variant_row is not None and variant_row[0] != f"vector({dimensions})":
+                    await cursor.execute("DROP INDEX IF EXISTS faq_variants_embedding_hnsw")
+                    await cursor.execute("TRUNCATE faq_variants")
+                    await cursor.execute(f"ALTER TABLE faq_variants ALTER COLUMN embedding TYPE vector({dimensions})")
+                await cursor.execute("""
+                    CREATE INDEX IF NOT EXISTS faq_variants_embedding_hnsw
+                    ON faq_variants USING hnsw (embedding vector_cosine_ops)
+                """)
             await connection.commit()
 
     async def sync(self, documents: list[FaqDocument]) -> SyncResult:
+        if not documents:
+            raise RuntimeError("Refusing to sync an empty FAQ corpus")
         async with self._pool.connection() as connection:
             async with connection.cursor(row_factory=dict_row) as cursor:
                 await cursor.execute("SELECT faq_id, language, content_hash, corpus_version, embedding_model, embedding_dimensions FROM faq_documents")
@@ -118,8 +155,63 @@ class PostgresFaqRepository:
                     """, (document.id, document.language, document.title, document.answer, document.searchable_text,
                            document.content_hash, self._settings.faq_corpus_version, self._settings.voyage_model, self._settings.voyage_embedding_dimensions,
                            _vector(embedding)))
+                for document in documents:
+                    await cursor.execute("""
+                        INSERT INTO faq_entries (faq_id, language, title, answer, content_hash, corpus_version)
+                        VALUES (%s,%s,%s,%s,%s,%s)
+                        ON CONFLICT (faq_id, language) DO UPDATE SET title=EXCLUDED.title,
+                          answer=EXCLUDED.answer, content_hash=EXCLUDED.content_hash,
+                          corpus_version=EXCLUDED.corpus_version
+                    """, (document.id, document.language, document.title, document.answer,
+                           document.content_hash, self._settings.faq_corpus_version))
                 keys = [f"{document.id}:{document.language}" for document in documents]
                 await cursor.execute("DELETE FROM faq_documents WHERE (faq_id || ':' || language) <> ALL(%s)", (keys,))
+                deleted = cursor.rowcount
+                await cursor.execute("DELETE FROM faq_entries WHERE (faq_id || ':' || language) <> ALL(%s)", (keys,))
+            await connection.commit()
+        return SyncResult(inserted=inserted, updated=updated, unchanged=unchanged, deleted=max(deleted, 0))
+
+    async def sync_variants(self, variants: list[FaqVariant]) -> SyncResult:
+        """Synchronize question variants and the reserved no-answer sink."""
+        if not variants:
+            raise RuntimeError("Refusing to sync an empty FAQ variant corpus")
+        dimensions = self._settings.voyage_embedding_dimensions
+        desired = {f"{item.faq_id}:{item.content_hash}": item for item in variants}
+        async with self._pool.connection() as connection:
+            async with connection.cursor(row_factory=dict_row) as cursor:
+                await cursor.execute("SELECT variant_key, content_hash, corpus_version, embedding_model, embedding_dimensions FROM faq_variants")
+                existing = {row["variant_key"]: row for row in await cursor.fetchall()}
+        changed: list[tuple[str, FaqVariant]] = []
+        inserted = updated = unchanged = 0
+        for key, item in desired.items():
+            row = existing.get(key)
+            if row is None:
+                inserted += 1; changed.append((key, item))
+            elif row["content_hash"] != item.content_hash or row["corpus_version"] != self._settings.faq_corpus_version or row["embedding_model"] != self._settings.voyage_model or row["embedding_dimensions"] != dimensions:
+                updated += 1; changed.append((key, item))
+            else:
+                unchanged += 1
+        vectors = await self._embeddings.embed([item.text for _, item in changed], input_type="document") if changed else []
+        if len(vectors) != len(changed):
+            raise RuntimeError("Embedding provider returned an unexpected number of FAQ variant vectors")
+        async with self._pool.connection() as connection:
+            async with connection.cursor() as cursor:
+                for (key, item), embedding in zip(changed, vectors, strict=True):
+                    if len(embedding) != dimensions:
+                        raise RuntimeError("Embedding provider returned an unexpected FAQ variant dimension")
+                    await cursor.execute("""
+                        INSERT INTO faq_variants (variant_key, faq_id, text, dialect, review_status, synthetic,
+                          content_hash, corpus_version, embedding_model, embedding_dimensions, embedding, updated_at)
+                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s::vector,NOW())
+                        ON CONFLICT (variant_key) DO UPDATE SET faq_id=EXCLUDED.faq_id, text=EXCLUDED.text,
+                          dialect=EXCLUDED.dialect, review_status=EXCLUDED.review_status, synthetic=EXCLUDED.synthetic,
+                          content_hash=EXCLUDED.content_hash, corpus_version=EXCLUDED.corpus_version,
+                          embedding_model=EXCLUDED.embedding_model, embedding_dimensions=EXCLUDED.embedding_dimensions,
+                          embedding=EXCLUDED.embedding, updated_at=NOW()
+                    """, (key, item.faq_id, item.text, item.dialect, item.review_status, item.synthetic,
+                           item.content_hash, self._settings.faq_corpus_version, self._settings.voyage_model,
+                           dimensions, _vector(embedding)))
+                await cursor.execute("DELETE FROM faq_variants WHERE variant_key <> ALL(%s)", (list(desired),))
                 deleted = cursor.rowcount
             await connection.commit()
         return SyncResult(inserted=inserted, updated=updated, unchanged=unchanged, deleted=max(deleted, 0))
