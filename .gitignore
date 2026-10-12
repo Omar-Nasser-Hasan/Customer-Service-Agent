@@ -12,3 +12,4 @@ pytest-local-temp/
 apps/admin/node_modules/
 apps/admin/.next/
 apps/admin/tsconfig.tsbuildinfo
+artifacts/
