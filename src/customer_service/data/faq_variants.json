@@ -1,0 +1,2312 @@
+[
+ {
+  "faq_id": "shipping-times",
+  "text": "General policy wording: How long does shipping take.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "General policy wording: When will my order arrive.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "General policy wording: How many days until my package gets here.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "General policy wording: What's the delivery time.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "General policy wording: Hi, I ordered something yesterday and I'm wondering how long delivery usually takes.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "General policy wording: How soon can I expect to receive my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "Store FAQ wording: shipping time.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "Store FAQ wording: delivery how many days.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "Store FAQ wording: how long delivry take.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "Store FAQ wording: ship time pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "Store FAQ wording: orders arrive in how long? thx.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كم يستغرق شحن الطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي مدة التوصيل المتوقعة.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى سيصلني الطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كم عدد الأيام التي يحتاجها الطلب للوصول.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: هل يستغرق وصول الطلبات وقتًا طويلًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما المدة الزمنية المعتادة لتسليم الطلبات.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "عايز أعرف سياسة المتجر عن: الشحن بياخد قد إيه.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "عايز أعرف سياسة المتجر عن: الأوردر هيوصلني امتى.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "عايز أعرف سياسة المتجر عن: التوصيل بياخد كام يوم.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "عايز أعرف سياسة المتجر عن: هو الطلب بيوصل في كام يوم تقريبا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "عايز أعرف سياسة المتجر عن: يعني هستنى كام يوم لحد ما الأوردر يجيلي.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "عايز أعرف سياسة المتجر عن: الطلبات بتوصل بعد قد إيه من ما بتتشحن.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "3ayez a3raf policy beta3et el store: el shipping by5od kam yom.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "3ayez a3raf policy beta3et el store: el order hayewsal emta.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "3ayez a3raf policy beta3et el store: el tawsil by5od adeh.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "3ayez a3raf policy beta3et el store: 3ayez a3raf el talab biywsal ba3d kam yom.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "3ayez a3raf policy beta3et el store: hastana kam yom l7ad ma el order yegi.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "Store policy question: الشحن takes how many days.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-times",
+  "text": "Store policy question: هل الـ delivery بياخد وقت طويل.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "General policy wording: How much does shipping cost (general policy).",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "General policy wording: How much does shipping cost please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "General policy wording: How much does shipping cost exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "General policy wording: How much does shipping cost for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "General policy wording: How much does shipping cost in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "General policy wording: How much does shipping cost can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "Store FAQ wording: How much does shipping cost pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "Store FAQ wording: How much does shipping cost.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "Store FAQ wording: How much does shipping cost asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "Store FAQ wording: How much does shipping cost help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "Store FAQ wording: How much does shipping cost now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما تكلفة الشحن.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما تكلفة الشحن من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما تكلفة الشحن بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما تكلفة الشحن عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما تكلفة الشحن للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما تكلفة الشحن أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "عايز أعرف سياسة المتجر عن: الشحن بكام (general policy).",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "عايز أعرف سياسة المتجر عن: الشحن بكام لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "عايز أعرف سياسة المتجر عن: الشحن بكام بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "عايز أعرف سياسة المتجر عن: الشحن بكام عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "عايز أعرف سياسة المتجر عن: الشحن بكام بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "عايز أعرف سياسة المتجر عن: الشحن بكام ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "3ayez a3raf policy beta3et el store: el shipping بكam.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "3ayez a3raf policy beta3et el store: el shipping بكam law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "3ayez a3raf policy beta3et el store: el shipping بكam belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "3ayez a3raf policy beta3et el store: el shipping بكam 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "3ayez a3raf policy beta3et el store: el shipping بكam beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "Store policy question: shipping بكام.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-cost",
+  "text": "Store policy question: shipping بكام please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "General policy wording: Where do you deliver.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "General policy wording: Where do you deliver please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "General policy wording: Where do you deliver exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "General policy wording: Where do you deliver for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "General policy wording: Where do you deliver in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "General policy wording: Where do you deliver can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "Store FAQ wording: Where do you deliver pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "Store FAQ wording: Where do you deliver.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "Store FAQ wording: Where do you deliver asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "Store FAQ wording: Where do you deliver help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "Store FAQ wording: Where do you deliver now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: إلى أين يتم التوصيل.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: إلى أين يتم التوصيل من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: إلى أين يتم التوصيل بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: إلى أين يتم التوصيل عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: إلى أين يتم التوصيل للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: إلى أين يتم التوصيل أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "عايز أعرف سياسة المتجر عن: بتوصلوا لفين.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "عايز أعرف سياسة المتجر عن: بتوصلوا لفين لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "عايز أعرف سياسة المتجر عن: بتوصلوا لفين بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "عايز أعرف سياسة المتجر عن: بتوصلوا لفين عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "عايز أعرف سياسة المتجر عن: بتوصلوا لفين بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "عايز أعرف سياسة المتجر عن: بتوصلوا لفين ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "3ayez a3raf policy beta3et el store: btwasselo fein.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "3ayez a3raf policy beta3et el store: btwasselo fein law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "3ayez a3raf policy beta3et el store: btwasselo fein belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "3ayez a3raf policy beta3et el store: btwasselo fein 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "3ayez a3raf policy beta3et el store: btwasselo fein beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "Store policy question: delivery فين.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "shipping-coverage",
+  "text": "Store policy question: delivery فين please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "General policy wording: How can I track my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "General policy wording: How can I track my order please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "General policy wording: How can I track my order exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "General policy wording: How can I track my order for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "General policy wording: How can I track my order in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "General policy wording: How can I track my order can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "Store FAQ wording: How can I track my order pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "Store FAQ wording: How can I track my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "Store FAQ wording: How can I track my order asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "Store FAQ wording: How can I track my order help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "Store FAQ wording: How can I track my order now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف يمكنني تتبع طلبي.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف يمكنني تتبع طلبي من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف يمكنني تتبع طلبي بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف يمكنني تتبع طلبي عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف يمكنني تتبع طلبي للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف يمكنني تتبع طلبي أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "عايز أعرف سياسة المتجر عن: اتابع الأوردر إزاي.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "عايز أعرف سياسة المتجر عن: اتابع الأوردر إزاي لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "عايز أعرف سياسة المتجر عن: اتابع الأوردر إزاي بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "عايز أعرف سياسة المتجر عن: اتابع الأوردر إزاي عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "عايز أعرف سياسة المتجر عن: اتابع الأوردر إزاي بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "عايز أعرف سياسة المتجر عن: اتابع الأوردر إزاي ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "3ayez a3raf policy beta3et el store: atabe3 el order ezay.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "3ayez a3raf policy beta3et el store: atabe3 el order ezay law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "3ayez a3raf policy beta3et el store: atabe3 el order ezay belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "3ayez a3raf policy beta3et el store: atabe3 el order ezay 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "3ayez a3raf policy beta3et el store: atabe3 el order ezay beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "Store policy question: track الطلب إزاي.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-tracking",
+  "text": "Store policy question: track الطلب إزاي please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "General policy wording: What does the order status mean.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "General policy wording: What does the order status mean please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "General policy wording: What does the order status mean exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "General policy wording: What does the order status mean for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "General policy wording: What does the order status mean in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "General policy wording: What does the order status mean can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "Store FAQ wording: What does the order status mean pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "Store FAQ wording: What does the order status mean.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "Store FAQ wording: What does the order status mean asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "Store FAQ wording: What does the order status mean help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "Store FAQ wording: What does the order status mean now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما معنى حالة الطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما معنى حالة الطلب من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما معنى حالة الطلب بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما معنى حالة الطلب عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما معنى حالة الطلب للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما معنى حالة الطلب أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "عايز أعرف سياسة المتجر عن: حالة الأوردر معناها إيه.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "عايز أعرف سياسة المتجر عن: حالة الأوردر معناها إيه لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "عايز أعرف سياسة المتجر عن: حالة الأوردر معناها إيه بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "عايز أعرف سياسة المتجر عن: حالة الأوردر معناها إيه عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "عايز أعرف سياسة المتجر عن: حالة الأوردر معناها إيه بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "عايز أعرف سياسة المتجر عن: حالة الأوردر معناها إيه ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "3ayez a3raf policy beta3et el store: 7alet el order ma3naha eh.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "3ayez a3raf policy beta3et el store: 7alet el order ma3naha eh law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "3ayez a3raf policy beta3et el store: 7alet el order ma3naha eh belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "3ayez a3raf policy beta3et el store: 7alet el order ma3naha eh 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "3ayez a3raf policy beta3et el store: 7alet el order ma3naha eh beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "Store policy question: status الطلب يعني إيه.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "order-statuses",
+  "text": "Store policy question: status الطلب يعني إيه please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "General policy wording: How long do I have to return an item.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "General policy wording: What is your return policy.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "General policy wording: Can I return something I bought.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "General policy wording: Within how many days can I send a product back.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "General policy wording: I changed my mind about my purchase, is it still possible to return it.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "General policy wording: Do you accept returns on items I've already opened.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "Store FAQ wording: return window.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "Store FAQ wording: returns how many days.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "Store FAQ wording: can i retun an item.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "Store FAQ wording: return policy pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "Store FAQ wording: send back product deadline.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كم يوم لدي لإرجاع المنتج بعد استلامه.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي سياسة الإرجاع لديكم.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: هل يمكنني إرجاع منتج اشتريته.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي المدة المسموح بها لإعادة المنتج.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: هل يمكن إرجاع منتج بعد فتحه.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: خلال كم يومًا يمكنني إعادة الطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "عايز أعرف سياسة المتجر عن: أقدر أرجّع المنتج في كام يوم.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "عايز أعرف سياسة المتجر عن: عندي كام يوم عشان أرجّع الحاجة اللي اشتريتها.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "عايز أعرف سياسة المتجر عن: سياسة الاسترجاع عندكم إيه.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "عايز أعرف سياسة المتجر عن: ينفع أرجع المنتج بعد ما أستلمه.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "عايز أعرف سياسة المتجر عن: لو فتحت العلبة لسه أقدر أرجعه.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "عايز أعرف سياسة المتجر عن: هو فيه مدة معينة للإرجاع.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "3ayez a3raf policy beta3et el store: a2der arga3 el montag fi kam yom.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "3ayez a3raf policy beta3et el store: 3andi kam yom 3ashan arga3 el 7aga.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "3ayez a3raf policy beta3et el store: siyasit el estergaa 3andkom eh.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "3ayez a3raf policy beta3et el store: yenfa3 arga3 el montag ba3d ma astalemo.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "3ayez a3raf policy beta3et el store: law fata7t el 3elba lessa a2der arga3o.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "Store policy question: عايز أعمل return خلال كام يوم.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-window",
+  "text": "Store policy question: ال return policy عندكم إيه.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "General policy wording: How do I start a return (general policy).",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "General policy wording: How do I start a return please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "General policy wording: How do I start a return exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "General policy wording: How do I start a return for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "General policy wording: How do I start a return in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "General policy wording: How do I start a return can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "Store FAQ wording: How do I start a return pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "Store FAQ wording: How do I start a return.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "Store FAQ wording: How do I start a return asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "Store FAQ wording: How do I start a return help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "Store FAQ wording: How do I start a return now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف أبدأ عملية الإرجاع (general policy).",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف أبدأ عملية الإرجاع من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف أبدأ عملية الإرجاع بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف أبدأ عملية الإرجاع عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف أبدأ عملية الإرجاع للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف أبدأ عملية الإرجاع أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "عايز أعرف سياسة المتجر عن: أبدأ الإرجاع إزاي (general policy).",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "عايز أعرف سياسة المتجر عن: أبدأ الإرجاع إزاي لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "عايز أعرف سياسة المتجر عن: أبدأ الإرجاع إزاي بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "عايز أعرف سياسة المتجر عن: أبدأ الإرجاع إزاي عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "عايز أعرف سياسة المتجر عن: أبدأ الإرجاع إزاي بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "عايز أعرف سياسة المتجر عن: أبدأ الإرجاع إزاي ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "3ayez a3raf policy beta3et el store: abda2 el erga3 ezay (general policy).",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "3ayez a3raf policy beta3et el store: abda2 el erga3 ezay law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "3ayez a3raf policy beta3et el store: abda2 el erga3 ezay belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "3ayez a3raf policy beta3et el store: abda2 el erga3 ezay 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "3ayez a3raf policy beta3et el store: abda2 el erga3 ezay beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "Store policy question: start الإرجاع إزاي.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "return-process",
+  "text": "Store policy question: start الإرجاع إزاي please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "General policy wording: When will I receive my refund.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "General policy wording: When will I receive my refund please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "General policy wording: When will I receive my refund exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "General policy wording: When will I receive my refund for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "General policy wording: When will I receive my refund in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "General policy wording: When will I receive my refund can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "Store FAQ wording: When will I receive my refund pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "Store FAQ wording: When will I receive my refund.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "Store FAQ wording: When will I receive my refund asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "Store FAQ wording: When will I receive my refund help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "Store FAQ wording: When will I receive my refund now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى أحصل على المبلغ المسترد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى أحصل على المبلغ المسترد من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى أحصل على المبلغ المسترد بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى أحصل على المبلغ المسترد عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى أحصل على المبلغ المسترد للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى أحصل على المبلغ المسترد أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بترجع امتى.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بترجع امتى لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بترجع امتى بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بترجع امتى عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بترجع امتى بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بترجع امتى ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "3ayez a3raf policy beta3et el store: el floos bterga3 emta.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "3ayez a3raf policy beta3et el store: el floos bterga3 emta law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "3ayez a3raf policy beta3et el store: el floos bterga3 emta belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "3ayez a3raf policy beta3et el store: el floos bterga3 emta 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "3ayez a3raf policy beta3et el store: el floos bterga3 emta beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "Store policy question: refund الفلوس امتى.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "refund-timing",
+  "text": "Store policy question: refund الفلوس امتى please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "General policy wording: Which payment methods do you accept.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "General policy wording: Can I pay with a credit card.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "General policy wording: What ways can I pay for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "General policy wording: Do you take debit cards.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "General policy wording: How can I pay at checkout.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "General policy wording: Are cards accepted on your store.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "Store FAQ wording: payment methods.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "Store FAQ wording: pay with card.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "Store FAQ wording: accept cards.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "Store FAQ wording: how to pay pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "Store FAQ wording: payment options thx.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي طرق الدفع المتاحة لديكم.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: هل يمكنني الدفع باستخدام البطاقة الائتمانية.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: كيف يمكنني دفع ثمن الطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: هل تقبلون البطاقات المصرفية.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي وسائل الدفع المقبولة.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: أود معرفة خيارات الدفع المتوفرة..",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "عايز أعرف سياسة المتجر عن: بتقبلوا الدفع إزاي.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "عايز أعرف سياسة المتجر عن: أقدر أدفع بالكارت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "عايز أعرف سياسة المتجر عن: طرق الدفع عندكم إيه.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "عايز أعرف سياسة المتجر عن: ينفع أدفع بالكريديت كارد.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "عايز أعرف سياسة المتجر عن: هدفع إزاي لما أطلب.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "عايز أعرف سياسة المتجر عن: فيه أنهي كروت بتقبلوها.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "3ayez a3raf policy beta3et el store: betaqbalo el daf3 ezay.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "3ayez a3raf policy beta3et el store: a2der adfa3 bel card.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "3ayez a3raf policy beta3et el store: toro2 el daf3 3andokom eh.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "3ayez a3raf policy beta3et el store: yenfa3 adfa3 bel credit card.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "3ayez a3raf policy beta3et el store: hadfa3 ezay lama at3lob.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "Store policy question: بتقبلوا credit cards.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-methods",
+  "text": "Store policy question: can I أدفع بالكارت.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "General policy wording: When am I charged for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "General policy wording: When am I charged for my order please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "General policy wording: When am I charged for my order exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "General policy wording: When am I charged for my order for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "General policy wording: When am I charged for my order in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "General policy wording: When am I charged for my order can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "Store FAQ wording: When am I charged for my order pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "Store FAQ wording: When am I charged for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "Store FAQ wording: When am I charged for my order asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "Store FAQ wording: When am I charged for my order help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "Store FAQ wording: When am I charged for my order now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى يتم الخصم من قيمة الطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى يتم الخصم من قيمة الطلب من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى يتم الخصم من قيمة الطلب بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى يتم الخصم من قيمة الطلب عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى يتم الخصم من قيمة الطلب للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: متى يتم الخصم من قيمة الطلب أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بتتخصم امتى.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بتتخصم امتى لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بتتخصم امتى بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بتتخصم امتى عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بتتخصم امتى بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "عايز أعرف سياسة المتجر عن: الفلوس بتتخصم امتى ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "3ayez a3raf policy beta3et el store: el floos betet5asam emta.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "3ayez a3raf policy beta3et el store: el floos betet5asam emta law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "3ayez a3raf policy beta3et el store: el floos betet5asam emta belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "3ayez a3raf policy beta3et el store: el floos betet5asam emta 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "3ayez a3raf policy beta3et el store: el floos betet5asam emta beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "Store policy question: charge الطلب امتى.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "payment-charging",
+  "text": "Store policy question: charge الطلب امتى please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "General policy wording: What are the support hours.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "General policy wording: What are the support hours please.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "General policy wording: What are the support hours exactly.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "General policy wording: What are the support hours for my order.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "General policy wording: What are the support hours in general.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "General policy wording: What are the support hours can you tell me.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "Store FAQ wording: What are the support hours pls.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "Store FAQ wording: What are the support hours.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "Store FAQ wording: What are the support hours asap.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "Store FAQ wording: What are the support hours help.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "Store FAQ wording: What are the support hours now.",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي ساعات الدعم.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي ساعات الدعم من فضلك.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي ساعات الدعم بالتحديد.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي ساعات الدعم عمومًا.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي ساعات الدعم للطلب.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "أرغب في معرفة سياسة المتجر بشأن: ما هي ساعات الدعم أرجو التوضيح.",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "عايز أعرف سياسة المتجر عن: الدعم شغال امتى.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "عايز أعرف سياسة المتجر عن: الدعم شغال امتى لو سمحت.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "عايز أعرف سياسة المتجر عن: الدعم شغال امتى بالظبط.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "عايز أعرف سياسة المتجر عن: الدعم شغال امتى عمومًا.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "عايز أعرف سياسة المتجر عن: الدعم شغال امتى بتاع الأوردر.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "عايز أعرف سياسة المتجر عن: الدعم شغال امتى ممكن توضح.",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "3ayez a3raf policy beta3et el store: el support sh8al emta.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "3ayez a3raf policy beta3et el store: el support sh8al emta law sama7t.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "3ayez a3raf policy beta3et el store: el support sh8al emta belzabt.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "3ayez a3raf policy beta3et el store: el support sh8al emta 3ametan.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "3ayez a3raf policy beta3et el store: el support sh8al emta beta3 el order.",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "Store policy question: support شغال امتى.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "support-hours",
+  "text": "Store policy question: support شغال امتى please.",
+  "dialect": "mixed",
+  "review_status": "draft",
+  "synthetic": true
+ }
+]

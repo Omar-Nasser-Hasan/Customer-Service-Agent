@@ -1,0 +1,478 @@
+[
+ {
+  "faq_id": "__no_answer__",
+  "text": "Do you offer cash on delivery?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يوجد دفع عند الاستلام؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "فيه دفع عند الاستلام؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "feh daf3 3and el esteلام?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Do you offer instalments?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يوجد تقسيط؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "فيه تقسيط؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "feh ta2seet?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Can I exchange an item?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يمكن استبدال المنتج؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "ينفع أبدّل المنتج؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "yenfa3 abaddel el montag?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Can I cancel my order?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يمكن إلغاء الطلب؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "ينفع ألغي الأوردر؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "yenfa3 alghi el order?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Can I change the delivery address?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يمكن تغيير عنوان التوصيل؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "ينفع أغيّر عنوان التوصيل؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "yenfa3 aghayar 3enwan el tawseel?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Does this product have a warranty?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يوجد ضمان على المنتج؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "المنتج عليه ضمان؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "el montag 3aleh daman?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Do you have discount codes?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل توجد أكواد خصم؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "عندكم كود خصم؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "3andokom coupon khasm?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "When will this product be back in stock?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "متى يتوفر المنتج مجددًا؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "المنتج هيتوفر تاني امتى؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "el montag hayetwafar tany emta?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Do you offer gift wrapping?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل تتوفر خدمة تغليف الهدايا؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "بتغلفوا الهدايا؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "betghalfo el hadaya?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Do you handle bulk orders?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل تقبلون الطلبات بالجملة؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "بتقبلوا طلبات جملة؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "bet2ablo talabات gomla?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Can I sell products through your store?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يمكنني البيع عبر متجركم؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "ينفع أبيع على متجركم؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "yenfa3 abe3 3ala store beta3kom?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Can I get a VAT invoice?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يمكن إصدار فاتورة ضريبية؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "ممكن فاتورة ضريبية؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "momken فاتورة darيبية?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Do you ship internationally and handle customs?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل تشحنون دوليًا وتتعاملون مع الجمارك؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "بتشحنوا بره مصر؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "btesh7نو barra Masr?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Can I choose a delivery time slot?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل يمكن اختيار موعد محدد للتوصيل؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "ينفع أحدد ميعاد التوصيل؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "yenfa3 a7added ميعاد el tawseel?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Do you have loyalty points?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "هل لديكم نقاط ولاء؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "عندكم نقاط مكافآت؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "3andokom no2at wafa?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "Where is your physical store?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "أين يقع المتجر الفعلي؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "المحل بتاعكم فين؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "el ma7al fein?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "What is your phone number?",
+  "dialect": "en",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "ما رقم الهاتف؟",
+  "dialect": "msa",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "رقم التليفون كام؟",
+  "dialect": "egyptian",
+  "review_status": "draft",
+  "synthetic": true
+ },
+ {
+  "faq_id": "__no_answer__",
+  "text": "raqam el telephone kam?",
+  "dialect": "arabizi",
+  "review_status": "draft",
+  "synthetic": true
+ }
+]
