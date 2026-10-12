@@ -77,7 +77,7 @@ class StaticFaqRepository:
             "shipping": FaqEntry(id="shipping-times", title="Shipping times", answer="Most orders arrive within 3 to 5 business days after dispatch."),
         }
 
-    async def search(self, query: str) -> FaqEntry | None:
+    async def search(self, query: str, *, language: str = "en") -> FaqEntry | None:
         normalized = query.casefold()
         if normalized in self.entries:
             return self.entries[normalized]
